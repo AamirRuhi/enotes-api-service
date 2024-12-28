@@ -10,7 +10,7 @@ import lombok.Setter;
 @MappedSuperclass
 public class BaseModel {
 	private Boolean isActive;
-
+    // if true means delete for user but availabe in db
 	private Boolean isDeleted;
 
 	private Integer createdBy;

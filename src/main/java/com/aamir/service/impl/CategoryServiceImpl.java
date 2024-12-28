@@ -2,6 +2,7 @@ package com.aamir.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
@@ -60,7 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public List<CategoryDto> getAllCategory() {
-		List<Category> categories = categoryRepository.findAll();
+		//List<Category> categories = categoryRepository.findAll();
+		List<Category> categories = categoryRepository.findByIsDeletedFalse();
 		//category mila to stream api se categoryDto me convert krenge
 		List<CategoryDto> categoryDtoList = categories.stream().map(cat->modelMapper.map(cat, CategoryDto.class)).toList();
 		return categoryDtoList;
@@ -69,10 +71,41 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<CategoryResponse> getActiveCategory() {
 		//abhi active or inactive dono aya ab condition lga denge
-		List<Category> categories = categoryRepository.findByIsActiveTrue();
+		//List<Category> categories = categoryRepository.findByIsActiveTrue();
+		List<Category> categories = categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
 		//ab active category mil gya hai ab response
 		List<CategoryResponse> categorylist = categories.stream().map(cat->modelMapper.map(cat, CategoryResponse.class)).toList();
 		return categorylist;
 	}
 
+	@Override
+	public CategoryDto getCategoryById(Integer id) {
+		//Optional<Category> findbycategory = categoryRepository.findById(id);
+		Optional<Category> findbycategory = categoryRepository.findByIdAndIsDeletedFalse(id);
+		if(findbycategory.isPresent()) {
+			Category category = findbycategory.get();
+			//response me categoryDto dena hai to modelmapper se convert kr lenge
+			CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
+			return categoryDto;
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean deleteCategory(Integer id) {
+		//db me isdeleted 0 ->false means delete nhi hai 1 ->true means deled h, koi delete krta h to true kr denge ke baad save kr denge
+		//lekin getmapping kr rha hu 2 id ka delete krne ke baad fir bhi dekh rha hai
+		//to condition lgayenge ki isDelete agre true h to na dikhe (getCategoryById me)
+		// gelAllcategory me abhi bhi dikh rha hai
+		// ab active-category wale me dikh rha hai
+		Optional<Category> findbycategory = categoryRepository.findById(id);
+		if(findbycategory.isPresent()) {
+			Category category = findbycategory.get();
+			category.setIsDeleted(true);
+			categoryRepository.save(category);
+		return true;
+	}
+		return false;
+
+}
 }
