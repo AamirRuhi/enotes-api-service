@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.aamir.dto.CategoryDto;
 import com.aamir.dto.CategoryResponse;
 import com.aamir.entity.Category;
+import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.repository.CategoryRepository;
 import com.aamir.service.CategoryService;
 
@@ -100,12 +101,12 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDto getCategoryById(Integer id) {
+	public CategoryDto getCategoryById(Integer id) throws Exception {
 		//Optional<Category> findbycategory = categoryRepository.findById(id);
-		Optional<Category> findbycategory = categoryRepository.findByIdAndIsDeletedFalse(id);
-		if(findbycategory.isPresent()) {
-			Category category = findbycategory.get();
-			//response me categoryDto dena hai to modelmapper se convert kr lenge
+	Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
+				.orElseThrow(()->new ResourceNotFoundException("category not found with id="+id));
+		if(!ObjectUtils.isEmpty(category)) {
+			category.getName().toUpperCase();
 			CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
 			return categoryDto;
 		}
