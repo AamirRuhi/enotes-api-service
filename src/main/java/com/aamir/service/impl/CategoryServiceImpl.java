@@ -3,7 +3,7 @@ package com.aamir.service.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import com.aamir.entity.Category;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.repository.CategoryRepository;
 import com.aamir.service.CategoryService;
+import com.aamir.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -25,6 +26,9 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private Validation validation;
 	
 	@Override
 	public boolean saveCategory(CategoryDto categoryDto) {
@@ -48,6 +52,8 @@ public class CategoryServiceImpl implements CategoryService {
 	     *	category.setCreatedOn(new Date());
 		 */		//ye category bnake set kr rhe hai yahi pr modelmapper ka concept ata hai
 		
+		//validation exception use here first autowired Validation
+		validation.categryValidation(categoryDto);
 		Category category = modelMapper.map(categoryDto, Category.class);
 		//update bhi isi method se kr lenge id send krke
 		if(ObjectUtils.isEmpty(category.getId())) {
