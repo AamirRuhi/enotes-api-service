@@ -10,7 +10,7 @@ import com.aamir.entity.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer>{
 
-	List<Category> findByIsActiveTrue();
+	//List<Category> findByIsActiveTrue();
 
 	Optional<Category> findByIdAndIsDeletedFalse(Integer id);
 

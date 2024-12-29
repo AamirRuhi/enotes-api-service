@@ -48,15 +48,36 @@ public class CategoryServiceImpl implements CategoryService {
 		 */		//ye category bnake set kr rhe hai yahi pr modelmapper ka concept ata hai
 		
 		Category category = modelMapper.map(categoryDto, Category.class);
-		category.setIsDeleted(false);
-		category.setCreatedBy(1);
-		category.setCreatedOn(new Date());
+		//update bhi isi method se kr lenge id send krke
+		if(ObjectUtils.isEmpty(category.getId())) {
+			category.setIsDeleted(false);
+			category.setCreatedBy(1);
+			category.setCreatedOn(new Date());
+			
+		}else {
+			//iske liye method niche bna liya
+			updateCategory(category);
+		}
 		Category savecategory = categoryRepository.save(category);
 		if (ObjectUtils.isEmpty(savecategory)) {
 			return false;
 		}
 
 		return true;
+	}
+
+	private void updateCategory(Category category) {
+		Optional<Category> findbyId = categoryRepository.findById(category.getId());
+		if(findbyId.isPresent()) {
+			Category exitcategory = findbyId.get();
+			//ye update nhi hona chahiye
+			category.setCreatedBy(exitcategory.getCreatedBy());
+			category.setCreatedOn(exitcategory.getCreatedOn());
+			category.setIsDeleted(exitcategory.getIsDeleted());
+			//kon update kiya or kab kiya
+			category.setUpdatedBy(1);
+			category.setUpdatedOn(new Date());
+		}
 	}
 
 	@Override
