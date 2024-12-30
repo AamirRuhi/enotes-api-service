@@ -25,9 +25,9 @@ public class Validation {
 				error.put("name", "name field is empty or null");
 			}else {
 				//if user gave name then we will check maxsize..etc
-				if(categoryDto.getName().length()<10)
+				if(categoryDto.getName().length()<3)
 				{
-					error.put("name", "name length min 10");
+					error.put("name", "name length min 3");
 				}
 				if(categoryDto.getName().length()>100)
 				{
