@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 import com.aamir.dto.CategoryDto;
 import com.aamir.dto.CategoryResponse;
 import com.aamir.entity.Category;
+import com.aamir.exception.ExistDataException;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.repository.CategoryRepository;
 import com.aamir.service.CategoryService;
@@ -54,6 +55,15 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		//validation exception use here first autowired Validation
 		validation.categryValidation(categoryDto);
+		
+		//exit category implement , checking existing , trim()->remove space
+		
+		boolean exist=categoryRepository.existsByName(categoryDto.getName().trim());
+	
+		if(exist) {
+			//exiting purpose ke ek class existDataException class create krenge,then exceptionhandler bnayenge
+			throw new  ExistDataException("Category already exist");
+		}
 		Category category = modelMapper.map(categoryDto, Category.class);
 		//update bhi isi method se kr lenge id send krke
 		if(ObjectUtils.isEmpty(category.getId())) {

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,6 +62,17 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(e.getErrors(),HttpStatus.BAD_REQUEST);
 		
 	}
+	@ExceptionHandler(ExistDataException.class)
+	public ResponseEntity<?> handleExistDataException(ExistDataException e){	
+		//use save category inplement me 
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+		
+	}
+	// post man se isActive agre string me other than true or false send kiye to HttpMessageNotReadableException excep aya to handle kro isse
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e){	
+		return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		
+	}
 	
-
 }
