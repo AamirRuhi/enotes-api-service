@@ -2,7 +2,10 @@ package com.aamir.entity;
 
 import java.util.Date;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +19,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+//jisme track krna usme entitylistioner lgana hai
+@EntityListeners(AuditingEntityListener.class)
 public class Category extends BaseModel{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +30,8 @@ public class Category extends BaseModel{
 
 	private String description;
 	
-	
-	//createdBy ,createdDate,updatedBy,updatedDate, isactive ,isdeleted ye sab table ke liye common hai to
-	//uske liye alg class bnake(BaseModel) inherit kr lenge
+	private Boolean isActive;
+	private Boolean isDeleted; 
+
 	
 	}

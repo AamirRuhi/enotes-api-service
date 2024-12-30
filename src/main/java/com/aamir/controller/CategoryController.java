@@ -43,9 +43,6 @@ public class CategoryController {
 
 	@GetMapping("/")
 	public ResponseEntity<?> getallCategory() {
-		// ex handling
-		// String nm=null;
-		// nm.toUpperCase();
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
 
 		if (CollectionUtils.isEmpty(allCategory)) {

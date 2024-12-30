@@ -58,8 +58,8 @@ public class CategoryServiceImpl implements CategoryService {
 		//update bhi isi method se kr lenge id send krke
 		if(ObjectUtils.isEmpty(category.getId())) {
 			category.setIsDeleted(false);
-			category.setCreatedBy(1);
-			category.setCreatedOn(new Date());
+			//category.setCreatedBy(1);
+			//category.setCreatedOn(new Date());
 			
 		}else {
 			//iske liye method niche bna liya
@@ -82,8 +82,8 @@ public class CategoryServiceImpl implements CategoryService {
 			category.setCreatedOn(exitcategory.getCreatedOn());
 			category.setIsDeleted(exitcategory.getIsDeleted());
 			//kon update kiya or kab kiya
-			category.setUpdatedBy(1);
-			category.setUpdatedOn(new Date());
+			//category.setUpdatedBy(1);
+			//category.setUpdatedOn(new Date());
 		}
 	}
 

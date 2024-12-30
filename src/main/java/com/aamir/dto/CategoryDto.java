@@ -17,19 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryDto {
 	private Integer id;
-	//@valid bhi lgana hai save-category ke handler pe 
-	//2nd way se valida krte ha class bnake
-  // @NotBlank(message="name should not blank ,null,empty")
-   //@Min(value = 10)
-   
-	//@Max(value = 100)
 	private String name;
-//   @NotBlank(message="name description not blank ,null,empty")
-//   @Min(value = 10)
-//   @Max(value = 100)
 	private String description;
-
-	//@NotNull
 	private Boolean isActive;
 
 	private Integer createdBy;
