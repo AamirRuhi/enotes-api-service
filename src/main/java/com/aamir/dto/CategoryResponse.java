@@ -3,6 +3,8 @@ package com.aamir.dto;
 //mujhe sab chij response me nhi dikhana hai
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
