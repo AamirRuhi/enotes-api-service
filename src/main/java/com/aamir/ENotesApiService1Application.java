@@ -13,12 +13,16 @@ public class ENotesApiService1Application {
 	}
 
 	
-	/* Generic response response me only 3 field denge 1-status,2-message,3-data me data send kren wale hai
-	 * abhi hum save kr rhe hai to response save success a rha h lekin hum generic type me dena hai
-	 * Using a generic response in APIs is a common practice to standardize the structure of responses,
-	 *  making it easier for clients to parse and handle them.
-	 *  ex like status, error messages, or timestamps.
-	 *  handler pakage class generic response
+	/* {
+    "title":"python with boot",
+    "description":"python is programming language",
+    "category":{
+        "id":58
+    }
+}  notes string me mila h ,pr save krna h notes object me by objectmapper ke help se
+ab form-data me send krenge key notes ,value- wo pura json (required=false) liya @requestparam se pehle qki abhi hum file upload nhi kr rhe hai
+// ab file bhi upload krna hai to fileDetails ke naam se ek entity bna lunga
+
 */ 
 
 }
