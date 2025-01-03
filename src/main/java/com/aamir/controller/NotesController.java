@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.NotesDto;
 import com.aamir.service.NotesService;
@@ -25,10 +27,11 @@ public class NotesController {
 private NotesService notesService;
 	
 @PostMapping("/")
-public ResponseEntity<?> saveNotess(@RequestBody NotesDto notesDto) throws Exception{
+public ResponseEntity<?> saveNotess(@RequestParam String notes,@RequestParam(required=false) MultipartFile file) throws Exception{
 	//category bhi dena hai like "categoryDto":{id:12
-//}
-	boolean saveNotes = notesService.saveNotes(notesDto);
+//} file upload me data ko string me file ko muiltipart me 
+	//abhi file nhi liye h to (required=false) krdenge @RequestParam ke baad or form-data me key->notes ,value- json
+	boolean saveNotes = notesService.saveNotes(notes,file);
 	if(saveNotes) {
 		//generic response denge ,data nhi dena h msg dena h
 		return CommonUtil.createBuildResponseMessage("notes saved success", HttpStatus.CREATED);

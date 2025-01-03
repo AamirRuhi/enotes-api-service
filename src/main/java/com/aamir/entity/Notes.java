@@ -29,4 +29,7 @@ private String description;
 //bahut sara notes 1 category me ho skta hai
 @ManyToOne
 private Category category;
+//jab file ka kaam krenge to file bhi de denge
+@ManyToOne
+private FileDetails fileDetails;
 }
