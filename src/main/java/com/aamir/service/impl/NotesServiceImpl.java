@@ -1,7 +1,9 @@
 package com.aamir.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.NotesDto;
@@ -47,25 +50,17 @@ private NotesRepository notesRepository;
 	@Override
 	
 	public boolean saveNotes(String notes,MultipartFile file) throws Exception {
-		//notes string me mila h ,pr save krna h notes object me by objectmapper ke help se
-		//add jdk in class part instead of jre
 		ObjectMapper ob=new ObjectMapper();
 		NotesDto notesDto=ob.readValue(notes, NotesDto.class);
-		//notes string me mila h ,pr save krna h notes object me by objectmapper ke help se
 		
 		  checkCategoryExist(notesDto.getCategory());
 		  
-		  // ye upper wala last me 
 		  Notes notesMap = modelMapper.map(notesDto, Notes.class);
-			//ab file upload ke liye ek method bna  ke liye 
 			FileDetails fileDetails=saveFileDetails(file);
-		//ager user file nhi deta hai ye hum last me kr rhe hai dene wala krke , fir inner class filedto bhi bnalenge ,kya dikhana hai response me
 			if(!ObjectUtils.isEmpty(fileDetails)) {
 				notesMap.setFileDetails(fileDetails);
 			}else {
-				//user file nhi diya to null mil jayega 
 				notesMap.setFileDetails(null);
-				//ab file ke sath json send krenge
 			}
 			
 		  
@@ -79,57 +74,31 @@ private NotesRepository notesRepository;
 	}
 
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
-		//agr user file diya hai
-		//ager nhi diya hai to !ObjectUtils.isEmpty(file)&&
 		if(!ObjectUtils.isEmpty(file) && !file.isEmpty()) {
-			//start file ke extention pr bhi condition lga stke hai
-
+		
 			String originalFilename = file.getOriginalFilename();
 			String extension = FilenameUtils.getExtension(originalFilename);
-			//file ke extention pr bhi condition lga stke hai
-			List<String> extentionAllow = Arrays.asList("pdf","xlsx","jpg");
+			List<String> extentionAllow = Arrays.asList("pdf","xlsx","jpg","dock","jpeg");
 			if(!extentionAllow.contains(extension)) {
 				throw new IllegalArgumentException("invalid file formate ,u can upload only pdf,xlsx,jpg ");
 			}
-			//end file ke extention pr bhi condition lga stke hai
-			
-			//String originalFilename = file.getOriginalFilename(); extention  (bhi) pr condition dene ke liye comment kiya or upper likha
-			//fileDetails.setOriginalFileName(originalFilename);
-			
-			
-			//getDisplatFileName complete ke bbad ,random no generate krenge file ko uniiiiiique dikhane ke liye
 		 String rndString = UUID.randomUUID().toString();
-		// String extension = FilenameUtils.getExtension(originalFilename);
-		 //ab new filename aya 7 character ka + extention, uploadfilename,displayfilename,originalfilename 3no ho chuka parth or filesize bacha hai
 		 String uploadfilename = rndString+"."+extension;
-		// fileDetails.setUploadFileName(uploadfilename);
-		 //filesize set kr liya
-		// fileDetails.setFileSize(file.getSize());
-		 //path me ab kis path me store hoga file, application.property me parh declare kr diya
 		 File saveeFile=new File(uploadpath);
-		 //file ka object bnaunga uske parameter me uploadpath dunga
 		 
 		 if(!saveeFile.exists()) {
-			//check file create hua ki nhi notes folder ager exist nhi h to notes naam ka foldet create krna hai
 			 saveeFile.mkdir();
 		 }
-		 //path:enotesapiservice/notes/java.pdf
 		 String storepath = uploadpath.concat(uploadfilename);
-		 //fileDetails.setPath(storepath);
 		 
-		 //upload file locally
 		 long uploaded = Files.copy(file.getInputStream(), Paths.get(storepath));
 		 if(uploaded!=0) {
-			//fileDetails ka object chahiye or useme detail set krenge 
 				FileDetails fileDetails=new FileDetails();
 				fileDetails.setOriginalFileName(originalFilename);
-				//getDisplatFileName naam ka ek method bna lete hai
 				fileDetails.setDisplayFileName(getDisplatFileName(originalFilename));
 				 fileDetails.setUploadFileName(uploadfilename);
 				 fileDetails.setPath(storepath);
-				 //filesize set kr liya
 				 fileDetails.setFileSize(file.getSize());
-			 // db me store krna h to repository chahiye bnalo FileRepository 
 			 FileDetails saveFileDtls = fileRepository.save(fileDetails);
 			 return saveFileDtls;
 		 }
@@ -165,4 +134,23 @@ private NotesRepository notesRepository;
 		return notesRepository.findAll().stream().map(note->modelMapper.map(note, NotesDto.class)).toList();	
 	}
 
+	@Override
+	public byte[] downloadFile(FileDetails fileDetails) throws Exception {
+		
+		InputStream io= new FileInputStream(fileDetails.getPath());
+		//inputstream ka object ko bye array me convert kr liya , filenotfoundexception aa skta hai ,
+		//filenotfoundexception handle kernge globalexception handler me
+	
+		byte[] byteArray = StreamUtils.copyToByteArray(io);
+		//file ke naam ke sath get krna hai to getFileDetails naam ka ek or method bnayege
+		return byteArray;
+	}
+
+	@Override
+	public FileDetails getFileDetails(Integer id) throws Exception {
+		FileDetails fileDetails = fileRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("file is not available"));
+		return fileDetails;
+	}
+
+	
 }
