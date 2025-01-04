@@ -14,6 +14,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesDto.CategoryDto;
+import com.aamir.dto.NotesResponse;
 import com.aamir.entity.FileDetails;
 import com.aamir.entity.Notes;
 import com.aamir.exception.ResourceNotFoundException;
@@ -150,6 +154,32 @@ private NotesRepository notesRepository;
 	public FileDetails getFileDetails(Integer id) throws Exception {
 		FileDetails fileDetails = fileRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("file is not available"));
 		return fileDetails;
+	}
+
+	
+	@Override
+	public NotesResponse getAllNotesByUser(Integer userId , Integer pageNo, Integer pageSize) {
+		// 0 index se page no statr hota hai to humne (1,5) means 2nd page pe 5 data ko dikhana hai
+		//1,5 static diya hai lekin hume dynamic krna hai controller se krenge
+		//Pageable  pageable = PageRequest.of(1, 2);
+		Pageable  pageable = PageRequest.of(pageNo, pageSize);
+		//NotesResponse class bnake dto me response denge jab pagination krte h to response me dete hai
+		Page<Notes> pagenotes =notesRepository.findByCreatedBy(userId,pageable);
+		//ab all notes get kr skta hu lekin pagination lgana hai to start krte h upper se qki findByCreatedBy method me pageble ka obj denge
+		//notesDto me covert krenge notes ko
+		List<NotesDto> notesDto = pagenotes.get().map(n->modelMapper.map(n, NotesDto.class)).toList();
+		//response me set krna hai
+		NotesResponse notes =NotesResponse.builder()
+		.notes(notesDto)
+		.pageNo(pagenotes.getNumber())
+		.pageSize(pagenotes.getSize())
+		.totalElements(pagenotes.getTotalElements())
+		.totalPages(pagenotes.getTotalPages())
+		.isFirst(pagenotes.isFirst())
+		.isLast(pagenotes.isLast())
+		.build();
+		
+		return notes;
 	}
 
 	
