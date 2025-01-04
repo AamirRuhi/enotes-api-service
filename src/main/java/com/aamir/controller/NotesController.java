@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.NotesDto;
+import com.aamir.dto.NotesResponse;
 import com.aamir.entity.FileDetails;
 import com.aamir.service.NotesService;
 import com.aamir.util.CommonUtil;
@@ -62,11 +63,6 @@ public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception
 	
 }
 
-
-
-
-
-
 @GetMapping("/")
 public ResponseEntity<?> getAllNotesss(){
 	List<NotesDto> allNotes = notesService.getAllNotes();
@@ -74,6 +70,24 @@ public ResponseEntity<?> getAllNotesss(){
 		// data nhi aya to no content ka koi body nhi hota
 	return  ResponseEntity.noContent().build();
 	}
+	//object pass krna hai isliye createBuildResponse
+	return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
+	
+}
+// jo user add notes kiya hai wahi get kr skta hai notes , abhi static user de rha hai
+//dynamic dikhane ke liye @requestparam but pehle getAllNotesssByUser parameter me kuch nhi tha,getAllNotesByUser pageno,pagesize pass kr denge ,service or imple me bhi
+//default 0 index se strt hoga ,custom krne ke liye param me key pagen0->1,pagesize->4
+@GetMapping("/user-notes")
+public ResponseEntity<?> getAllNotesssByUser(
+		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
+	
+	Integer userId=1;
+	NotesResponse allNotes = notesService.getAllNotesByUser(userId,pageNo,pageSize);
+	/*
+	 * if(CollectionUtils.isEmpty(allNotes)) { // data nhi aya to no content ka koi
+	 * body nhi hota return ResponseEntity.noContent().build(); }
+	 */
 	//object pass krna hai isliye createBuildResponse
 	return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	
