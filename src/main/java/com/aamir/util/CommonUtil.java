@@ -1,6 +1,8 @@
 package com.aamir.util;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.aamir.handler.GenericResponse;
@@ -50,6 +52,25 @@ public class CommonUtil {
 				.build();
 		return response.create();
 		//every api end point  me use krenge isse fir globalexception class se jo response send kr rhe the usme bhi change controller handler ki tarah
+	}
+
+	public static String getContentType(String originalFileName) {
+		//FilenameUtils se extension get kiya sab file ka 
+		String extension = FilenameUtils.getExtension(originalFileName);
+		switch (extension) {
+		case "pdf":
+			return "application/pdf";
+		case "xlsx":
+			return "application/vnd.openxmlformats-officedocument.spreadsheettml.sheet";
+		case "txt":
+			return "text/plan";
+		case "png":
+			return "image/png";
+		case "jpeg":
+			return "image/jpeg";
+		default:
+			return "application/octet-stream";
+		}
 	}
 
 }
