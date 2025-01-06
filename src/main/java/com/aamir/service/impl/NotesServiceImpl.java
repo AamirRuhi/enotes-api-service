@@ -26,14 +26,17 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aamir.dto.FavouriteNotesDto;
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesDto.CategoryDto;
 import com.aamir.dto.NotesDto.FilesDto;
 import com.aamir.dto.NotesResponse;
+import com.aamir.entity.FavouriteNotes;
 import com.aamir.entity.FileDetails;
 import com.aamir.entity.Notes;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.repository.CategoryRepository;
+import com.aamir.repository.FavouriteNotesRepository;
 import com.aamir.repository.FileRepository;
 import com.aamir.repository.NotesRepository;
 import com.aamir.service.NotesService;
@@ -54,6 +57,9 @@ private NotesRepository notesRepository;
 	
 	@Autowired
 	private FileRepository fileRepository;
+	
+	@Autowired
+	private FavouriteNotesRepository favouriteNotesRepository;
 	
 	
 	@Override
@@ -258,6 +264,39 @@ private NotesRepository notesRepository;
 			notesRepository.deleteAll(recycleNotes);	
 		}
 		
+	}
+
+	@Override
+	public void favouriteNotes(Integer noteId) throws Exception {
+		//get all notes by id
+		// user module abhi implement nhi kiya hai to static le lerhe hai, auditing me 1 id rhe h means wohi login hai
+		Integer userId=1;
+		Notes notes = notesRepository.findById(noteId).orElseThrow(()->new ResourceNotFoundException("notes not found && id invalid"));
+		
+		FavouriteNotes favouriteNotes=FavouriteNotes.builder()
+				.note(notes)
+				.userId(userId)
+				.build();
+		
+		favouriteNotesRepository.save(favouriteNotes);
+		
+	}
+
+	@Override
+	public void unFavouriteNotes(Integer favouriteNotesId) throws Exception {
+		
+		FavouriteNotes favouriteNotes = favouriteNotesRepository.findById(favouriteNotesId).orElseThrow(()->new ResourceNotFoundException("favouritenotes not found && id invalid"));
+         //unFavouriteNotes means delete krna hai
+		favouriteNotesRepository.delete(favouriteNotes);
+	}
+
+	@Override
+	public List<FavouriteNotesDto> getUserFavouriteNotes() throws Exception {
+		int userId=1;
+		List<FavouriteNotes> favouriteNotes = favouriteNotesRepository.findByUserId(userId);
+		//response me direct entity nhi dena hai to isse dto me convert krenge
+		List<FavouriteNotesDto> Favlist = favouriteNotes.stream().map(favNote->modelMapper.map(favNote, FavouriteNotesDto.class)).toList();
+		return Favlist;
 	}
 
 	

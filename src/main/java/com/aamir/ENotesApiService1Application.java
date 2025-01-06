@@ -22,10 +22,8 @@ public class ENotesApiService1Application {
         "id":58
     }
 }  
-hum direct delete nhi krenge recyle bean me dalenge or time set kr denge ki kab delete hoga ,with time ke andar hum usse resume bhi kr skte h
-//krne ke liye Notes entity me field define krenge isDeleted default false hoga agr user delete kr dega to true user ko nhi dikhega
- * deletedOn kab delete hua
-
+favorite note add or remove favorite notes 1->favoriteNotes entity bnalo
+pehle add favove note , getall faveurite notes and unfaveurite notes give favouritenotes id 
 */ 
 
 }
