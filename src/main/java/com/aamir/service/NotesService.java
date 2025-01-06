@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.aamir.dto.FavouriteNotesDto;
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesResponse;
 import com.aamir.entity.FileDetails;
@@ -33,4 +34,12 @@ public interface NotesService {
 	public void hardDeleteNotes(Integer id) throws Exception;
 
 	public void emptyRecycleBin(Integer userId);
+	// yahi bnalo favouritenotes ke liye bhi
+	
+	public void favouriteNotes(Integer noteId) throws Exception;
+	
+	public  void unFavouriteNotes(Integer favouriteNotesId) throws Exception;
+	
+	public List<FavouriteNotesDto> getUserFavouriteNotes() throws Exception; 
+	//FavouriteNotesDto bnalo 
 }
