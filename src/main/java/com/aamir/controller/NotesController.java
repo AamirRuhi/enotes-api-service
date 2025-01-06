@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,6 +92,48 @@ public ResponseEntity<?> getAllNotesssByUser(
 	//object pass krna hai isliye createBuildResponse
 	return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	
+}
+@GetMapping("/delete/{id}")
+public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception{
+	notesService.softDeleteNotes(id);
+	
+	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
+}
+@GetMapping("/restore/{id}")
+public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
+	notesService.restoreNotes(id);
+	
+	return CommonUtil.createBuildResponseMessage(" notes restored success", HttpStatus.OK);
+}
+
+
+@GetMapping("/recycle-bin")
+public ResponseEntity<?> getUserRecleBinNotes() throws Exception{
+	//deleted notes ko recycle bean me rakhne wale hai , authentication time user se is lunga lekin abhi static leke bna rha hu
+	Integer userId=1;
+	List<NotesDto> notes=notesService.getUserRecyclyBinNotes(userId);
+	if(CollectionUtils.isEmpty(notes)) {
+		return CommonUtil.createBuildResponseMessage("Notes not availble in Recycle bin", HttpStatus.OK);
+	}
+	return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+}
+//NotesSchedular completion  ke baad hum database se hard delete krne wale hai 
+//ab ek api jise jo notes recycle bin me h use delete kr skta hai based on id , ya fully folder ko bhi delete kr skta hai
+@DeleteMapping("/delete/{id}")
+public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception{
+	
+	notesService.hardDeleteNotes(id);
+	
+	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
+}
+//ab recycle bin ka sara delete krne ke liye 
+@DeleteMapping("/delete")
+public ResponseEntity<?> emptyRecycleBineNotes()throws Exception{
+	//jo user login h , kis user ka notes recycle bin me h get get krke delete all , userid ststic lenege
+	Integer userId=1;
+	notesService.emptyRecycleBin(userId);
+	
+	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
 }
 
 }
