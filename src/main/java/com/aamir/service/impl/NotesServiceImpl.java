@@ -299,5 +299,29 @@ private NotesRepository notesRepository;
 		return Favlist;
 	}
 
+	@Override
+	public boolean copyNotes(Integer id) throws Exception {
+		//id ke based pr notes get krenge, Notes me builder user kr lenge, file ko copy nhi krenge
+		Notes notes = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("notes id is invalid ! not found"));
+       Notes copyNote=Notes.builder()
+    		   .title(notes.getTitle())
+    		   .description(notes.getDescription())
+    		   .category(notes.getCategory())
+    		   .isDeleted(false)
+    		   .fileDetails(null)
+    		   .build();// createdby,updatedby...aditing ke help se set ho jayega
+       
+       //jo user notes copy kr rha h wo usi ka notes hona chahiyr
+       //TODO :need to check user validation
+       
+       Notes saveCopyNote = notesRepository.save(copyNote);
+       if(!ObjectUtils.isEmpty(saveCopyNote)) {
+    	   
+    	   return true;
+       }
+	return false;
+		
+	}
+
 	
 }
