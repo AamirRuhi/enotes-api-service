@@ -1,5 +1,8 @@
 package com.aamir.entity;
 
+import java.time.LocalDateTime;
+
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
@@ -31,5 +34,9 @@ private String description;
 private Category category;
 //jab file ka kaam krenge to file bhi de denge
 @ManyToOne
-private FileDetails fileDetails;
+private FileDetails fileDetails; 
+private boolean isDeleted;
+//private Date deletedOn; use krenge LocalDate days ko minus krne ke liye
+private LocalDateTime deletedOn;
+
 }

@@ -1,5 +1,6 @@
 package com.aamir.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.aamir.entity.Category;
@@ -29,6 +30,10 @@ public class NotesDto {
 	private Date updatedOn;
 	
 	private FilesDto fileDetails;
+	
+	private boolean isDeleted;
+	private LocalDateTime deletedOn;
+
 
 	@Getter
 	@Setter

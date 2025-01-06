@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,12 +21,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesDto.CategoryDto;
+import com.aamir.dto.NotesDto.FilesDto;
 import com.aamir.dto.NotesResponse;
 import com.aamir.entity.FileDetails;
 import com.aamir.entity.Notes;
@@ -57,6 +62,17 @@ private NotesRepository notesRepository;
 		ObjectMapper ob=new ObjectMapper();
 		NotesDto notesDto=ob.readValue(notes, NotesDto.class);
 		
+		notesDto.setDeleted(false);
+		notesDto.setDeletedOn(null);
+		
+		//start update ke liye agr id milega to update ho jayega wrna save hoga
+		if(!ObjectUtils.isEmpty(notesDto.getId())) {
+			updateNotes(notesDto,file);
+		}
+		
+		//end update ke liye agr id milega to update ho jayega
+		
+		
 		  checkCategoryExist(notesDto.getCategory());
 		  
 		  Notes notesMap = modelMapper.map(notesDto, Notes.class);
@@ -64,10 +80,12 @@ private NotesRepository notesRepository;
 			if(!ObjectUtils.isEmpty(fileDetails)) {
 				notesMap.setFileDetails(fileDetails);
 			}else {
-				notesMap.setFileDetails(null);
+				//start update ke liye agr id milega to update ho jayega, agr user file kiya hai to
+				if(ObjectUtils.isEmpty(notesDto.getId())) {
+					notesMap.setFileDetails(null);
+				}
+				//end update ke liye agr id milega to update ho jayega
 			}
-			
-		  
 		  Notes savenotes = notesRepository.save(notesMap);
 		  if(!ObjectUtils.isEmpty(savenotes)) 
 		  { 
@@ -75,6 +93,16 @@ private NotesRepository notesRepository;
 			  }
 		 
 		return false;
+	}
+
+	private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
+		//user jo id de rha hai wo id db me h ya nhi check krke update krenge
+		Notes existnotes = notesRepository.findById(notesDto.getId()).orElseThrow(()->new ResourceNotFoundException("invalid notes id"));
+		//file dena optional hai ager diya to update kr denge otherwise previos wala rhne denge
+		if(ObjectUtils.isEmpty(file)) {
+			//user jab file nhi deya
+			notesDto.setFileDetails(modelMapper.map(existnotes.getFileDetails(), FilesDto.class));
+		}
 	}
 
 	private FileDetails saveFileDetails(MultipartFile file) throws IOException {
@@ -164,7 +192,7 @@ private NotesRepository notesRepository;
 		//Pageable  pageable = PageRequest.of(1, 2);
 		Pageable  pageable = PageRequest.of(pageNo, pageSize);
 		//NotesResponse class bnake dto me response denge jab pagination krte h to response me dete hai
-		Page<Notes> pagenotes =notesRepository.findByCreatedBy(userId,pageable);
+		Page<Notes> pagenotes =notesRepository.findByCreatedByAndIsDeletedFalse(userId,pageable);
 		//ab all notes get kr skta hu lekin pagination lgana hai to start krte h upper se qki findByCreatedBy method me pageble ka obj denge
 		//notesDto me covert krenge notes ko
 		List<NotesDto> notesDto = pagenotes.get().map(n->modelMapper.map(n, NotesDto.class)).toList();
@@ -180,6 +208,56 @@ private NotesRepository notesRepository;
 		.build();
 		
 		return notes;
+	}
+
+	@Override
+	public void softDeleteNotes(Integer id) throws Exception {
+		// id ke based pr notes get kiya jo user de rha hai
+		Notes notes = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("notes id is invalid ! not found"));
+		//isDeleted jo bydefault false hai usse true kr denge
+		notes.setDeleted(true);
+		notes.setDeletedOn(LocalDateTime.now());
+		notesRepository.save(notes);
+	}
+
+	@Override
+	public void restoreNotes(Integer id) throws Exception {
+		Notes notes = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("notes id is invalid ! not found"));
+		notes.setDeleted(false);
+		notes.setDeletedOn(null); 
+		notesRepository.save(notes);
+	
+		
+	}
+
+	@Override
+	public List<NotesDto> getUserRecyclyBinNotes(Integer userId) {
+		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
+		//Notes entity ko --->notesDto me convert kro,jo deleted h wo
+		List<NotesDto> notesList = recycleNotes.stream().map(note->modelMapper.map(note, NotesDto.class)).toList();
+		return notesList;
+	}
+
+	@Override
+	public void hardDeleteNotes(Integer id) throws Exception {
+		Notes notes = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("notes not found"));
+		//recycle bin me ka hi delete hoga ,bina soft dele kiye direct delete nhi kr skte
+		if(notes.isDeleted()) {
+			notesRepository.delete(notes);
+		}else {
+			throw new IllegalArgumentException("sorry you cant hard delete directly");
+		}
+	}
+
+	@Override
+	public void emptyRecycleBin(Integer userId) {
+		//jo user login h uska all notes milega recycle bin me
+		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
+		if(!CollectionUtils.isEmpty(recycleNotes))
+		{
+			notesRepository.deleteAll(recycleNotes);	
+		}
+		
 	}
 
 	
