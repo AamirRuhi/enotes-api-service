@@ -22,8 +22,7 @@ public class ENotesApiService1Application {
         "id":58
     }
 }  
-favorite note add or remove favorite notes 1->favoriteNotes entity bnalo
-pehle add favove note , getall faveurite notes and unfaveurite notes give favouritenotes id 
+copy notes row copy krne ke liye
 */ 
 
 }

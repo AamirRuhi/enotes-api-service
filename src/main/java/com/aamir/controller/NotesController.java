@@ -163,5 +163,16 @@ public ResponseEntity<?> getUserFavouritNotes()throws Exception{
 	
 	return CommonUtil.createBuildResponse(userFavouriteNotes, HttpStatus.OK);
 }
+// notes ke id ke base pe copy krke fir se insert kr denge
+//http://localhost:8081/api/v1/notes/copy/44
+@GetMapping("/copy/{id}")
+public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
+	boolean copyNotes = notesService.copyNotes(id);
+	if(copyNotes) {
+		return CommonUtil.createBuildResponseMessage(" Copied  success", HttpStatus.CREATED);
+
+	}
+	return CommonUtil.createErrorResponseMessage(" Copied  failled try again", HttpStatus.INTERNAL_SERVER_ERROR);
+}
 
 }
