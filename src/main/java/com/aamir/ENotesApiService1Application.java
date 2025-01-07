@@ -16,23 +16,32 @@ public class ENotesApiService1Application {
 
 	
 	/* {
-	 * for save todo
-    {
-    "title":"java core",
-    "status":{
-        "id":1
+	 * for register role table me jake id and name bnalenge 1, 2 -->USER , ADMIN 
+	 * 
+    
+   {
+    "firstName":"Becoder",
+    "lastName":"demo",
+    "email":"demo@gmail.com",
+    "mobNo":"7203180602",
+    "password":"Demo@123",
+    "roles":[
+        {
+        "id": 1
+        },
+      {
+        "id":2
+      }
+    ]
+}
+//setRole(userDto,user); method nhi use kiye to register time pe niche wala exception mila
+ *  {
+    "status": "failed",
+    "message": "failed",
+    "data": "JSON parse error: Cannot deserialize value of type `java.util.ArrayList<com.aamir.dto.UserDto$RoleDto>` from Object value (token `JsonToken.START_OBJECT`)"
+ means-->The RoleDto property in your UserDto is defined as a List<RoleDto> but the JSON you are passing contains 
+ a single object instead of an array.
     }
-}http://localhost:8081/api/v1/todo/1 id ke sath naam nhi aa rha hai naam lane ke liye
-//in progress me hai to emil send krenge plz complete it 12pm pe automatic TO USER CHAIYE TO USER MODULE KRLO
-}  
-todo management ---> set task status Todo entity bnao
-status ko manage krne ke liye enums pakage me TodoEnums class bnayege
-definition : Enums are used for representing a fixed set of related constants in a structured and meaningful way. 
-1->Status Codes (e.g., ACTIVE, INACTIVE, PENDING)
-2->Days of the Week (e.g., MONDAY, TUESDAY)
-3->Directions (e.g., NORTH, SOUTH, EAST, WEST)
-4->Payment Methods (e.g., CREDIT_CARD, PAYPAL, CASH)
-5->Order States (e.g., PLACED, SHIPPED, DELIVERED, CANCELLED)
 
 */ 
 
