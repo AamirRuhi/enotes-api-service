@@ -1,21 +1,31 @@
 package com.aamir.util;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.aamir.dto.CategoryDto;
 import com.aamir.dto.TodoDto;
 import com.aamir.dto.TodoDto.StatusDto;
+import com.aamir.dto.UserDto;
+import com.aamir.entity.Role;
 import com.aamir.enums.TodoStatus;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.exception.ValidationException;
+import com.aamir.repository.RoleRepository;
 
 @Component
 public class Validation {
 
+	 @Autowired
+	    private RoleRepository roleRepository;
+	   
 	
 	public void categryValidation(CategoryDto categoryDto) {
 		Map<String , Object> error=new LinkedHashMap<>();
@@ -79,7 +89,47 @@ public class Validation {
 		{
 			throw new ResourceNotFoundException("invalid status ");
 		}
+	}
+	//for register user
+	public void userValidation(UserDto userDto) {
+	
+		//isEmpty deprecated ho gya hai isliye hasText le liya
+		if(!StringUtils.hasText(userDto.getFirstName())) {
+			throw new IllegalArgumentException("first name is invalid");
+		}
 		
+		if(!StringUtils.hasText(userDto.getLastName())) {
+			throw new IllegalArgumentException("last name is invalid");
+		}
 		
+		if(!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+			//regex ke help se email ko validate krenge like @ symble h ,gmail h.  in util pakege me Constant class bnalenge usme ,matches method h
+			throw new IllegalArgumentException("emails is invalid");
+		}
+		if(!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
+			//regex ke help se mobno ko validate krenge like .  in util pakege me Constant class bnalenge usme ,matches method h
+			throw new IllegalArgumentException("mobil no is invalid");
+		}
+        if (!StringUtils.hasText(userDto.getPassword()) || !userDto.getPassword().matches(Constants.PASSWORD_REGEX)) {
+            throw new IllegalArgumentException(
+                "Password is invalid. It must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one digit, and one special character."
+            );
+        }
+		//roles pe validation krna hai request me send krna hai , sare roles ka id get kr lunga 
+		if(CollectionUtils.isEmpty(userDto.getRoles()))
+		{
+			throw new IllegalArgumentException("role is  invalid");
+		}else {
+			List<Integer> rolesIds = roleRepository.findAll().stream().map(r->r.getId()).toList();
+			//request ka id or db ka id match nhi hua to exxception throw kr lenge
+			
+			List<Integer> invalidreqRolesids = userDto.getRoles().stream()
+			.map(r->r.getId()).filter(roleId->!rolesIds.contains(roleId)).toList();
+			
+                   if(!CollectionUtils.isEmpty(invalidreqRolesids)) {
+           			throw new IllegalArgumentException("role is  invalid"+ invalidreqRolesids);
+
+                   }
+		}
 	}
 }
