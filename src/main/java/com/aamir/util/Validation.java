@@ -16,9 +16,11 @@ import com.aamir.dto.TodoDto.StatusDto;
 import com.aamir.dto.UserDto;
 import com.aamir.entity.Role;
 import com.aamir.enums.TodoStatus;
+import com.aamir.exception.ExistDataException;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.exception.ValidationException;
 import com.aamir.repository.RoleRepository;
+import com.aamir.repository.UserRepository;
 
 @Component
 public class Validation {
@@ -26,6 +28,9 @@ public class Validation {
 	 @Autowired
 	    private RoleRepository roleRepository;
 	   
+	 @Autowired
+	 private UserRepository userRepository;
+	 
 	
 	public void categryValidation(CategoryDto categoryDto) {
 		Map<String , Object> error=new LinkedHashMap<>();
@@ -105,6 +110,13 @@ public class Validation {
 		if(!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
 			//regex ke help se email ko validate krenge like @ symble h ,gmail h.  in util pakege me Constant class bnalenge usme ,matches method h
 			throw new IllegalArgumentException("emails is invalid");
+		}else {
+			//validate email  already existing
+			Boolean existEmail =userRepository.existsByEmail(userDto.getEmail());
+			if(existEmail) {
+				throw new ExistDataException("this email already exist");
+			}
+			
 		}
 		if(!StringUtils.hasText(userDto.getMobNo()) || !userDto.getMobNo().matches(Constants.MOBNO_REGEX)) {
 			//regex ke help se mobno ko validate krenge like .  in util pakege me Constant class bnalenge usme ,matches method h

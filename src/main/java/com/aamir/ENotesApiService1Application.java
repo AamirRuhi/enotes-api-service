@@ -16,32 +16,25 @@ public class ENotesApiService1Application {
 
 	
 	/* {
-	 * for register role table me jake id and name bnalenge 1, 2 -->USER , ADMIN 
-	 * 
-    
-   {
-    "firstName":"Becoder",
-    "lastName":"demo",
-    "email":"demo@gmail.com",
-    "mobNo":"7203180602",
-    "password":"Demo@123",
+	 * {
+    "firstName":"khan",
+    "lastName":"demoo",
+    "email":"a4aamir03@gmail.com",
+    "mobNo":"8203180602",
+    "password":"Deymo@123",
     "roles":[
         {
         "id": 1
-        },
-      {
-        "id":2
-      }
+        }
+     
     ]
 }
-//setRole(userDto,user); method nhi use kiye to register time pe niche wala exception mila
- *  {
-    "status": "failed",
-    "message": "failed",
-    "data": "JSON parse error: Cannot deserialize value of type `java.util.ArrayList<com.aamir.dto.UserDto$RoleDto>` from Object value (token `JsonToken.START_OBJECT`)"
- means-->The RoleDto property in your UserDto is defined as a List<RoleDto> but the JSON you are passing contains 
- a single object instead of an array.
-    }
+	 
+	 * 
+	 **email already exist ke liye only Validation class me else me custom method bnana hai bas 
+	 *send email to user while registering for registeration is conformed add dependency spring boot starer mail,serviceimpl pakage me EmailService naam ka class bnao
+    EmailRequest class bnayenge dto me email me kya lena hai
+   
 
 */ 
 
