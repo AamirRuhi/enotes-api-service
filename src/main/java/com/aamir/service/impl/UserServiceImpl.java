@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.aamir.dto.EmailRequest;
 import com.aamir.dto.UserDto;
 import com.aamir.entity.Role;
 import com.aamir.entity.User;
@@ -31,9 +32,12 @@ public class UserServiceImpl implements UserService{
     @Autowired
 	private ModelMapper modelMapper;
 	
+    @Autowired
+    private EmailService emailService;
+    
     
 	@Override
-	public boolean register(UserDto userDto) {
+	public boolean register(UserDto userDto) throws Exception {
 		//validation krenge id ke liye util pakege ke validation class me
 		validation.userValidation(userDto);
 		//GlobalExceptionhandler me ek exception handler bnalenge IllegalArgumentException
@@ -46,9 +50,29 @@ public class UserServiceImpl implements UserService{
 		User saveUser = userRepository.save(user);
 		//check save hua to object milega wrna null hoga
 		if(!ObjectUtils.isEmpty(saveUser)) {
+			//send email to user for confirmation register ,util me class EmailService bna liya and emailRequest in dto, ab yaha emailSend(saveUser) methpd
+			emailSend(saveUser);
 			return true;
 		}
 		return false;  // AuthController bnalenge
+	}
+
+
+	private void emailSend(User saveUser) throws Exception {
+		String message = "Hi,<b>"+ saveUser.getFirstName()+"</b> "
+	           + "<br> Your account register sucessfully.<br>"
+				+ "<br> Click the below link verify & Active your account <br>"
+				+ "<a href='#'>Click Here</a> <br><br>" 
+				+ "Thanks,<br> Welcom in Aamir's project.com";
+
+		EmailRequest emailRequest=EmailRequest.builder()
+				.to(saveUser.getEmail())
+				.title("your account registered success fully in aamir website")
+				.subject("account created success ")
+				//message ke liye alag se
+				.message(message)
+				.build();
+		emailService.sendEmail(emailRequest);
 	}
 
 
