@@ -23,13 +23,9 @@ public class ENotesApiService1Application {
 }   } Authorization me noAuth
      
     ]
-}// spring security appy from here add security dependency add krte hi console pe password generate hoga abhi koi bhi api url hit krte h to 401 unthorize	 
-abhi depency lgate hi krna h to Authorization-Basic Auth username->user,password->console wala password	 tab get kr payenge  ,auth,home without authentication get hoga 
-//securityconfig,userdetails,userdetailservice likhne ke pad console pr password generate nhi hoga
- *ab get krenge category ko bhi access kr skte hby email an password Authorization->Basic Auth,username->email,password->password db wala,all category get kr pa rhe h	 
-note:hume hr baar email,password dena pad rha h access ke kiye ko jipe humne authentication lgaya hah,ab ek login api bnate h or authenticate krwate h , fir wo sab ko access kre
- loken se hi authcontroller me ,overall http://localhost:8081/api/v1/auth/login body me email->db,password-->password db wala (login ko rha hai
-*
+}/isme hum custom token generate krenge,jo api access krenge authorization me token denge,add dependecy jjw imp,jjw jaction,jjw api 
+jwtservice,jwtserviceimpl bnayege
+note -->login time token generate krenge fir usi token ke help se other api bhi access kr skte hai
 */ 
 
 }

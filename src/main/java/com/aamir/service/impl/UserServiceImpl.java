@@ -21,6 +21,7 @@ import com.aamir.entity.Role;
 import com.aamir.entity.User;
 import com.aamir.repository.RoleRepository;
 import com.aamir.repository.UserRepository;
+import com.aamir.service.JwtService;
 import com.aamir.service.UserService;
 import com.aamir.util.Validation;
 
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService{
     
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private JwtService jwtService;
     
     
 	@Override
@@ -123,8 +127,8 @@ public class UserServiceImpl implements UserService{
 		{
 			//return krna h loginResponse ka object,loginResponse me user ka details chahiye
 			CustomUserDetails	customUserDetails= (CustomUserDetails)authenticate.getPrincipal();
-			//token baad me logic likhenge abhi custom bnale rhe hai abhi next video me,abhi qki set krna h
-			String token="hiufvuydxkrtd65e54s6yi5ufi78fr7kytdxxyk";
+			//token generate ke liye 1 jwtService ,jwtserviceimpl bnaunga
+			String token= jwtService.generateToken(customUserDetails.getUser());
 			LoginResponse loginResponse=LoginResponse.builder()
 					//userdto chaiye
 					.user(modelMapper.map(customUserDetails.getUser(), UserDto.class))
