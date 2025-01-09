@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.aamir.handler.GenericResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public class CommonUtil {
 	
 	// yaha 4 method bnalunga createBuildResponse,createBuildResponseMessage,createErrorResponse ,createErrorResponseMessage
@@ -71,6 +73,14 @@ public class CommonUtil {
 		default:
 			return "application/octet-stream";
 		}
+	}
+
+	public static String getUrl(HttpServletRequest request) {
+		//url get krenge
+		String apiUrl = request.getRequestURL().toString();////http://localhost:8081/api/v1/auth/
+		//lekin hume port tk get krna hai replace concept lgayenge
+		apiUrl=apiUrl.replace(request.getServletPath(), "");////http://localhost:8081
+		return apiUrl; //http://localhost:8081/api/v1/auth/ lekin hume port tk get krna hai
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.aamir.service.impl;
 
-import java.util.List;
+import java.util.List;import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.aamir.dto.EmailRequest;
 import com.aamir.dto.UserDto;
+import com.aamir.entity.AccountStatus;
 import com.aamir.entity.Role;
 import com.aamir.entity.User;
 import com.aamir.repository.RoleRepository;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService{
     
     
 	@Override
-	public boolean register(UserDto userDto) throws Exception {
+	public boolean register(UserDto userDto, String url) throws Exception {
 		//validation krenge id ke liye util pakege ke validation class me
 		validation.userValidation(userDto);
 		//GlobalExceptionhandler me ek exception handler bnalenge IllegalArgumentException
@@ -46,25 +47,37 @@ public class UserServiceImpl implements UserService{
 	// 	"data": "JSON parse error: Cannot deserialize value of type `java.util.ArrayList<com.aamir.dto.UserDto$RoleDto>
 		//` from Object value (token `JsonToken.START_OBJECT`)"  without setRole(userDto); method we get this exception register time
 		setRole(userDto,user);
-		
+		//start acount ferification code save krte time status bhi add ho jayega
+		AccountStatus status=AccountStatus.builder()
+				.isActive(false)
+				//Uuid use kiya random string generate krne ke liye
+				.verificationCode(UUID.randomUUID().toString())
+				.build();
+		user.setStatus(status);
+		// end  acount ferification code
 		User saveUser = userRepository.save(user);
 		//check save hua to object milega wrna null hoga
 		if(!ObjectUtils.isEmpty(saveUser)) {
 			//send email to user for confirmation register ,util me class EmailService bna liya and emailRequest in dto, ab yaha emailSend(saveUser) methpd
-			emailSend(saveUser);
+			emailSend(saveUser,url);
 			return true;
 		}
 		return false;  // AuthController bnalenge
 	}
 
 
-	private void emailSend(User saveUser) throws Exception {
-		String message = "Hi,<b>"+ saveUser.getFirstName()+"</b> "
-	           + "<br> Your account register sucessfully.<br>"
+	private void emailSend(User saveUser, String url) throws Exception {
+		String message = "Hi,<b>[[username]]</b> "
+	           + "<br>  Your account register sucessfully.<br>"
 				+ "<br> Click the below link verify & Active your account <br>"
-				+ "<a href='#'>Click Here</a> <br><br>" 
+				+ "<a href='[[url]]'>Click Here</a> <br><br>" 
 				+ "Thanks,<br> Welcom in Aamir's project.com";
 
+		// username and url denge ,dynamic krenge username and url ko replacement concept ke through
+		message=message.replace("[[username]]", saveUser.getFirstName());
+		  message =message.replace("[[url]]", url+"/api/v1/home/verify?uid="+saveUser.getId()+"&&code="+saveUser.getStatus().getVerificationCode());
+		//http://localhost:8081/api/v1/home/auth/  hit krne pr url me id and vrification code aa rha hai ,ab verify pr click krne pe isActive true kr lenge
+		//ab homecontroller bnalenge verify krne ke liye
 		EmailRequest emailRequest=EmailRequest.builder()
 				.to(saveUser.getEmail())
 				.title("your account registered success fully in aamir website")

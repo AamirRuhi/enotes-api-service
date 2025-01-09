@@ -12,6 +12,8 @@ import com.aamir.dto.UserDto;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -19,9 +21,13 @@ public class AuthController {
 	private UserService userService;
 	
 	@PostMapping("/")
-	public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) throws Exception
+	public ResponseEntity<?> registerUser(@RequestBody UserDto userDto,HttpServletRequest request) throws Exception
 	{
-		boolean register = userService.register(userDto);
+		//"http://localhost:8081/api/v1/home/verify?uid isko dynamic krne ke liye HttpServletRequest request ,request me url get krenge
+		String url =CommonUtil.getUrl(request);
+		//HttpServletRequest request big usr ko dynamic krne ke liye ,CommonUtil me
+		
+		boolean register = userService.register(userDto,url);
 		if(register) {
 			return CommonUtil.createBuildResponseMessage("register success", HttpStatus.CREATED);
 		}
