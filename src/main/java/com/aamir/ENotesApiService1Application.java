@@ -28,13 +28,13 @@ public class ENotesApiService1Application {
         }
      
     ]
-}
+}aacount verification ke liye jo mail gya h user ke pass
+register time pe user ka account bydefault inActive rhne wala hai ,to entity  me 1 class AccountStatus jisme
+ 2 field add krenge isActive and varificationCode,table bnayenge AccountStatus liye
+if user inActive h to verificationCode pe click krke Active ho jayega ,
 	 
-	 * 
-	 **email already exist ke liye only Validation class me else me custom method bnana hai bas 
-	 *send email to user while registering for registeration is conformed add dependency spring boot starer mail,serviceimpl pakage me EmailService naam ka class bnao
-    EmailRequest class bnayenge dto me email me kya lena hai
-   
+	 
+	 
 
 */ 
 
