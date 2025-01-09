@@ -4,10 +4,17 @@ import java.util.List;import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.aamir.config.security.CustomUserDetails;
 import com.aamir.dto.EmailRequest;
+import com.aamir.dto.LoginRequest;
+import com.aamir.dto.LoginResponse;
 import com.aamir.dto.UserDto;
 import com.aamir.entity.AccountStatus;
 import com.aamir.entity.Role;
@@ -37,6 +44,13 @@ public class UserServiceImpl implements UserService{
     private EmailService emailService;
     
     
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    
+    
 	@Override
 	public boolean register(UserDto userDto, String url) throws Exception {
 		//validation krenge id ke liye util pakege ke validation class me
@@ -55,6 +69,8 @@ public class UserServiceImpl implements UserService{
 				.build();
 		user.setStatus(status);
 		// end  acount ferification code
+		// for passwodencord
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User saveUser = userRepository.save(user);
 		//check save hua to object milega wrna null hoga
 		if(!ObjectUtils.isEmpty(saveUser)) {
@@ -94,6 +110,30 @@ public class UserServiceImpl implements UserService{
 		//reqRoleId se all all object get krenge
 		List<Role> roles = roleRepository.findAllById(reqRoleId);
 		user.setRoles(roles);
+	}
+
+
+	@Override
+	public LoginResponse login(LoginRequest loginRequest) {
+		//thenticationmanager ke through authenticate kkrne wala hu
+		Authentication authenticate = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		//isAuthenticated return boolean
+		if(authenticate.isAuthenticated())
+		{
+			//return krna h loginResponse ka object,loginResponse me user ka details chahiye
+			CustomUserDetails	customUserDetails= (CustomUserDetails)authenticate.getPrincipal();
+			//token baad me logic likhenge abhi custom bnale rhe hai abhi next video me,abhi qki set krna h
+			String token="hiufvuydxkrtd65e54s6yi5ufi78fr7kytdxxyk";
+			LoginResponse loginResponse=LoginResponse.builder()
+					//userdto chaiye
+					.user(modelMapper.map(customUserDetails.getUser(), UserDto.class))
+					.token(token)
+					.build(); 
+			return loginResponse;
+		}
+		return null;
+		
 	}
 
 }

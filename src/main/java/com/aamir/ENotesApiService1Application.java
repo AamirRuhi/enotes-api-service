@@ -13,29 +13,23 @@ public class ENotesApiService1Application {
 	public static void main(String[] args) {
 		SpringApplication.run(ENotesApiService1Application.class, args);
 	}
-
+	
 	
 	/* {
-	 * {
-    "firstName":"khan",
-    "lastName":"demoo",
+	 * 
+    "{
     "email":"a4aamir03@gmail.com",
-    "mobNo":"8203180602",
-    "password":"Deymo@123",
-    "roles":[
-        {
-        "id": 1
-        }
+    "password":"Deymo@123"
+}   } Authorization me noAuth
      
     ]
-}aacount verification ke liye jo mail gya h user ke pass
-register time pe user ka account bydefault inActive rhne wala hai ,to entity  me 1 class AccountStatus jisme
- 2 field add krenge isActive and varificationCode,table bnayenge AccountStatus liye
-if user inActive h to verificationCode pe click krke Active ho jayega ,
-	 
-	 
-	 
-
+}// spring security appy from here add security dependency add krte hi console pe password generate hoga abhi koi bhi api url hit krte h to 401 unthorize	 
+abhi depency lgate hi krna h to Authorization-Basic Auth username->user,password->console wala password	 tab get kr payenge  ,auth,home without authentication get hoga 
+//securityconfig,userdetails,userdetailservice likhne ke pad console pr password generate nhi hoga
+ *ab get krenge category ko bhi access kr skte hby email an password Authorization->Basic Auth,username->email,password->password db wala,all category get kr pa rhe h	 
+note:hume hr baar email,password dena pad rha h access ke kiye ko jipe humne authentication lgaya hah,ab ek login api bnate h or authenticate krwate h , fir wo sab ko access kre
+ loken se hi authcontroller me ,overall http://localhost:8081/api/v1/auth/login body me email->db,password-->password db wala (login ko rha hai
+*
 */ 
 
 }

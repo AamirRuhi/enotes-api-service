@@ -3,11 +3,14 @@ package com.aamir.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aamir.dto.LoginRequest;
+import com.aamir.dto.LoginResponse;
 import com.aamir.dto.UserDto;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
@@ -35,5 +38,19 @@ public class AuthController {
 
 		
 	}
-	
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception
+	//hr resource ko access krne ke liye bar bar username,password deni ki need nhi isliye login method bnaya
+	//loginRequest bnagee dto me kya request krne wale hai
+	{
+		LoginResponse loginResponse = userService.login(loginRequest);
+		if(ObjectUtils.isEmpty(loginResponse))
+		{
+			return CommonUtil.createErrorResponseMessage("invalid credential", HttpStatus.BAD_REQUEST);//isko globalexception me handle krenge
+		}
+		
+		return CommonUtil.createBuildResponse(loginResponse, HttpStatus.OK);
+				
+	}
+
 }
