@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aamir.dto.LoginRequest;
 import com.aamir.dto.LoginResponse;
-import com.aamir.dto.UserDto;
+import com.aamir.dto.UserRequest;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
 
@@ -24,7 +24,7 @@ public class AuthController {
 	private UserService userService;
 	
 	@PostMapping("/")
-	public ResponseEntity<?> registerUser(@RequestBody UserDto userDto,HttpServletRequest request) throws Exception
+	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception
 	{
 		//"http://localhost:8081/api/v1/home/verify?uid isko dynamic krne ke liye HttpServletRequest request ,request me url get krenge
 		String url =CommonUtil.getUrl(request);

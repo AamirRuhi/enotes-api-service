@@ -18,17 +18,12 @@ public class ENotesApiService1Application {
  * 
  *  
  *  
- *  
- *  
- *  
- *  
- *  
- * jo token mila hai ab jab hum api access karenge to header me token pass krna hai,jo token header me mil rha hai usse validate krna hai ,sahi token h ki nhi
- * ,expire hogya h token ya nhi hua hai use check krebge ,role check krenge 
- * 
- * role based authentication like user ko konsa api access kr skta hai ,admin konsa, or dono konsa api access kr skta hai
- *  
- *  
+  * bnayenge ,UserDto ki rename krenge UserRequest ,UserResponse bnayenge
+  * dto tab bnate h jab request and response same hota hai,alag ho to request and response
+ *   //jo user loggin hai uska information kaise get krna hai   , logged in user ka info get krne ke liye ,util pakage ke commonUtil me ek method
+getLoggedInUser
+note: jo AuditAwareConfig me static user ko diya hai wo dynamic krna hai 
+ab notesServiceimpl me userId dynamic diya ,todoServiceimpl jaha integer userId=2 tha usse dtnamic kiya
  *  */
 
 }

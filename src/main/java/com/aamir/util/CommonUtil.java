@@ -4,7 +4,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.aamir.config.security.CustomUserDetails;
+import com.aamir.dto.UserResponse;
+import com.aamir.entity.User;
 import com.aamir.handler.GenericResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,4 +87,15 @@ public class CommonUtil {
 		return apiUrl; //http://localhost:8081/api/v1/auth/ lekin hume port tk get krna hai
 	}
 
+	public static User getLoggedInUser() {
+		try {
+			//return type UserResponse abhi nhi kiye warna hume mapper ke help se User me to top me autowired krna hoga @component bnana hoga 
+			//	hum isse component nhi bnana chahte islite return type User liya ab UserController banyege
+				CustomUserDetails	logUser=(CustomUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				return logUser.getUser();
+		} catch (Exception e) {
+			throw e;
+		}
+		
+	}
 }

@@ -15,6 +15,7 @@ import com.aamir.enums.TodoStatus;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.repository.TodoRepository;
 import com.aamir.service.TodoService;
+import com.aamir.util.CommonUtil;
 import com.aamir.util.Validation;
 
 @Service
@@ -72,7 +73,8 @@ private TodoRepository todoRepository;
 	@Override
 	public List<TodoDto> getTodoByUser() {
 		//abhi user module nhi kiye hai to static user ko le rhe hai 1, qki auditing me 1 id liya h
-		Integer userId=1;
+		//Integer userId=1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Todo> todos=todoRepository.findByCreatedBy(userId);
 		//to convert in todoDto by useing stream
 		 List<TodoDto> todolist = todos.stream().map(td->modelMapper.map(td, TodoDto.class)).toList();
