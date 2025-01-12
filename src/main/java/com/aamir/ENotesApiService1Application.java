@@ -14,18 +14,21 @@ public class ENotesApiService1Application {
 		SpringApplication.run(ENotesApiService1Application.class, args);
 	}
 	
-	
-	/* {
-	 * 
-    "{
-    "email":"a4aamir03@gmail.com",
-    "password":"Deymo@123"
-}   } Authorization me noAuth
-     
-    ]
-}/isme hum custom token generate krenge,jo api access krenge authorization me token denge,add dependecy jjw imp,jjw jaction,jjw api 
-jwtservice,jwtserviceimpl bnayege
-note -->login time token generate krenge fir usi token ke help se other api bhi access kr skte hai
-*/ 
+/*
+ * 
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ *  
+ * jo token mila hai ab jab hum api access karenge to header me token pass krna hai,jo token header me mil rha hai usse validate krna hai ,sahi token h ki nhi
+ * ,expire hogya h token ya nhi hua hai use check krebge ,role check krenge 
+ * 
+ * role based authentication like user ko konsa api access kr skta hai ,admin konsa, or dono konsa api access kr skta hai
+ *  
+ *  
+ *  */
 
 }
