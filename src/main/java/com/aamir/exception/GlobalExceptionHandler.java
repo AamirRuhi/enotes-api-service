@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -70,19 +71,19 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ExistDataException.class)
 	public ResponseEntity<?> handleExistDataException(ExistDataException e){	
 		//use save category inplement me 
-		return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.CONFLICT);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(),HttpStatus.CONFLICT);
 		
 	}
 	// post man se isActive agre string me other than true or false send kiye to HttpMessageNotReadableException excep aya to handle kro isse
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e){	
-		return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(),HttpStatus.BAD_REQUEST);
 		
 	}
 	
 	@ExceptionHandler(FileNotFoundException.class)
 	public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException e){	
-		return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.NOT_FOUND);
+		return CommonUtil.createErrorResponseMessage(e.getMessage(),HttpStatus.NOT_FOUND);
 		
 	}
 	 @ExceptionHandler(IllegalArgumentException.class) 
@@ -97,8 +98,12 @@ public class GlobalExceptionHandler {
 	 //agr login nhi hua to
 	 @ExceptionHandler(BadCredentialsException.class) 
 	 public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e){
-		 return CommonUtil.createErrorResponse(e.getMessage(),HttpStatus.BAD_REQUEST);
+		 return CommonUtil.createErrorResponseMessage(e.getMessage(),HttpStatus.BAD_REQUEST);
 	 }
-	 
+	 //AccessDeniedHandler jab user admin ka endpoint hit krenga to 
+	 @ExceptionHandler(AccessDeniedException.class) 
+	  public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e){
+	 	  return CommonUtil.createErrorResponseMessage(e.getMessage(),HttpStatus.FORBIDDEN);
+	  }
 	
 }

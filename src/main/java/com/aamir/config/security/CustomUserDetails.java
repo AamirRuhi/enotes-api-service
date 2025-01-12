@@ -25,8 +25,8 @@ public class CustomUserDetails implements UserDetails{
 	
 			List<SimpleGrantedAuthority> authority=new ArrayList<>();
 			user.getRoles().forEach(r->{
-				authority.add(new SimpleGrantedAuthority(r.getName()));
-			});
+				authority.add(new SimpleGrantedAuthority("ROLE_"+r.getName())); //role lena hai like ROLE_ADMIN,agr ROLE liya to ROLE_ lena hai
+			});  //ager db me ROLE_ADMIN ,ROLE_USER hota to ROLE_ ( key) nhi dena padta jaise upper diya hai
 		return authority;
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,7 @@ public class CategoryController {
 	private CategoryService categoryService;
 
 	@PostMapping("/save-category")
+	@PreAuthorize("hasRole('ADMIN')")//only accessed by admin ,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
 	public ResponseEntity<?> saveCategory( @RequestBody CategoryDto categoryDto) {
 		boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
@@ -47,6 +49,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/")
+	@PreAuthorize("hasRole('ADMIN')")//only accessed by admin ,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
 	public ResponseEntity<?> getallCategory() {
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
 
@@ -61,6 +64,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/active-category")
+	@PreAuthorize("hasAnyRole('USER','ADMIN')")//only accessed by both,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
 	public ResponseEntity<?> getactiveCategory() {
 		List<CategoryResponse> allCategory = categoryService.getActiveCategory();
 
@@ -75,6 +79,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception {
 			CategoryDto categoryDto = categoryService.getCategoryById(id);
 
@@ -91,6 +96,7 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> deleteCategoryDetailsById(@PathVariable Integer id) {
 		Boolean deleted = categoryService.deleteCategory(id);
 
