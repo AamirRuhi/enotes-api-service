@@ -40,6 +40,7 @@ import com.aamir.repository.FavouriteNotesRepository;
 import com.aamir.repository.FileRepository;
 import com.aamir.repository.NotesRepository;
 import com.aamir.service.NotesService;
+import com.aamir.util.CommonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class NotesServiceImpl implements NotesService{
@@ -192,10 +193,11 @@ private NotesRepository notesRepository;
 
 	
 	@Override
-	public NotesResponse getAllNotesByUser(Integer userId , Integer pageNo, Integer pageSize) {
+	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize) {
 		// 0 index se page no statr hota hai to humne (1,5) means 2nd page pe 5 data ko dikhana hai
 		//1,5 static diya hai lekin hume dynamic krna hai controller se krenge
 		//Pageable  pageable = PageRequest.of(1, 2);
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		Pageable  pageable = PageRequest.of(pageNo, pageSize);
 		//NotesResponse class bnake dto me response denge jab pagination krte h to response me dete hai
 		Page<Notes> pagenotes =notesRepository.findByCreatedByAndIsDeletedFalse(userId,pageable);
@@ -237,7 +239,8 @@ private NotesRepository notesRepository;
 	}
 
 	@Override
-	public List<NotesDto> getUserRecyclyBinNotes(Integer userId) {
+	public List<NotesDto> getUserRecyclyBinNotes() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
 		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		//Notes entity ko --->notesDto me convert kro,jo deleted h wo
 		List<NotesDto> notesList = recycleNotes.stream().map(note->modelMapper.map(note, NotesDto.class)).toList();
@@ -256,7 +259,10 @@ private NotesRepository notesRepository;
 	}
 
 	@Override
-	public void emptyRecycleBin(Integer userId) {
+	public void emptyRecycleBin() {
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+		//jo user loggin h ab uski id dynamic krenge
+		
 		//jo user login h uska all notes milega recycle bin me
 		List<Notes> recycleNotes = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
 		if(!CollectionUtils.isEmpty(recycleNotes))
@@ -270,7 +276,10 @@ private NotesRepository notesRepository;
 	public void favouriteNotes(Integer noteId) throws Exception {
 		//get all notes by id
 		// user module abhi implement nhi kiya hai to static le lerhe hai, auditing me 1 id rhe h means wohi login hai
-		Integer userId=1;
+		//Integer userId=1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+		//jo user loggin h ab uski id dynamic krenge
+		
 		Notes notes = notesRepository.findById(noteId).orElseThrow(()->new ResourceNotFoundException("notes not found && id invalid"));
 		
 		FavouriteNotes favouriteNotes=FavouriteNotes.builder()
@@ -292,7 +301,10 @@ private NotesRepository notesRepository;
 
 	@Override
 	public List<FavouriteNotesDto> getUserFavouriteNotes() throws Exception {
-		int userId=1;
+		//int userId=1;
+		Integer userId = CommonUtil.getLoggedInUser().getId();
+		//jo user loggin h ab uski id dynamic krenge
+		
 		List<FavouriteNotes> favouriteNotes = favouriteNotesRepository.findByUserId(userId);
 		//response me direct entity nhi dena hai to isse dto me convert krenge
 		List<FavouriteNotesDto> Favlist = favouriteNotes.stream().map(favNote->modelMapper.map(favNote, FavouriteNotesDto.class)).toList();

@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import com.aamir.dto.CategoryDto;
 import com.aamir.dto.TodoDto;
 import com.aamir.dto.TodoDto.StatusDto;
-import com.aamir.dto.UserDto;
+import com.aamir.dto.UserRequest;
 import com.aamir.entity.Role;
 import com.aamir.enums.TodoStatus;
 import com.aamir.exception.ExistDataException;
@@ -93,7 +93,7 @@ public class Validation {
 	}
 
 	// for register user
-	public void userValidation(UserDto userDto) {
+	public void userValidation(UserRequest userDto) {
 
 		// isEmpty deprecated ho gya hai isliye hasText le liya
 		if (!StringUtils.hasText(userDto.getFirstName())) {

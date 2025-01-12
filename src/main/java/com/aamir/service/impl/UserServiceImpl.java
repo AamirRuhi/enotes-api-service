@@ -15,7 +15,7 @@ import com.aamir.config.security.CustomUserDetails;
 import com.aamir.dto.EmailRequest;
 import com.aamir.dto.LoginRequest;
 import com.aamir.dto.LoginResponse;
-import com.aamir.dto.UserDto;
+import com.aamir.dto.UserRequest;
 import com.aamir.entity.AccountStatus;
 import com.aamir.entity.Role;
 import com.aamir.entity.User;
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService{
     
     
 	@Override
-	public boolean register(UserDto userDto, String url) throws Exception {
+	public boolean register(UserRequest userDto, String url) throws Exception {
 		//validation krenge id ke liye util pakege ke validation class me
 		validation.userValidation(userDto);
 		//GlobalExceptionhandler me ek exception handler bnalenge IllegalArgumentException
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 
-	private void setRole(UserDto userDto, User user) {
+	private void setRole(UserRequest userDto, User user) {
 		List<Integer> reqRoleId = userDto.getRoles().stream().map(r->r.getId()).toList();
 		//reqRoleId se all all object get krenge
 		List<Role> roles = roleRepository.findAllById(reqRoleId);
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService{
 			String token= jwtService.generateToken(customUserDetails.getUser());
 			LoginResponse loginResponse=LoginResponse.builder()
 					//userdto chaiye
-					.user(modelMapper.map(customUserDetails.getUser(), UserDto.class))
+					.user(modelMapper.map(customUserDetails.getUser(), UserRequest.class))
 					.token(token)
 					.build(); 
 			return loginResponse;

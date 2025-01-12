@@ -24,6 +24,7 @@ import com.aamir.dto.FavouriteNotesDto;
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesResponse;
 import com.aamir.entity.FileDetails;
+import com.aamir.entity.User;
 import com.aamir.service.NotesService;
 import com.aamir.util.CommonUtil;
 
@@ -88,9 +89,10 @@ public ResponseEntity<?> getAllNotesss(){
 public ResponseEntity<?> getAllNotesssByUser(
 		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
 		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
-	
-	Integer userId=1;
-	NotesResponse allNotes = notesService.getAllNotesByUser(userId,pageNo,pageSize);
+ //jo user loggin h ab uski id dynamic krenge
+//	Integer userId=1;
+	Integer userId = CommonUtil.getLoggedInUser().getId();
+	NotesResponse allNotes = notesService.getAllNotesByUser(pageNo,pageSize);
 	/*
 	 * if(CollectionUtils.isEmpty(allNotes)) { // data nhi aya to no content ka koi
 	 * body nhi hota return ResponseEntity.noContent().build(); }
@@ -119,8 +121,8 @@ public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception
 @PreAuthorize("hasRole('USER')")
 public ResponseEntity<?> getUserRecleBinNotes() throws Exception{
 	//deleted notes ko recycle bean me rakhne wale hai , authentication time user se is lunga lekin abhi static leke bna rha hu
-	Integer userId=1;
-	List<NotesDto> notes=notesService.getUserRecyclyBinNotes(userId);
+	
+	List<NotesDto> notes=notesService.getUserRecyclyBinNotes();
 	if(CollectionUtils.isEmpty(notes)) {
 		return CommonUtil.createBuildResponseMessage("Notes not availble in Recycle bin", HttpStatus.OK);
 	}
@@ -139,10 +141,11 @@ public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Except
 //ab recycle bin ka sara delete krne ke liye 
 @DeleteMapping("/delete")
 @PreAuthorize("hasRole('USER')")
-public ResponseEntity<?> emptyRecycleBineNotes()throws Exception{
+public ResponseEntity<?> emptyUserRecycleBine()throws Exception{
 	//jo user login h , kis user ka notes recycle bin me h get get krke delete all , userid ststic lenege
-	Integer userId=1;
-	notesService.emptyRecycleBin(userId);
+	
+	
+	notesService.emptyRecycleBin();
 	
 	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
 }

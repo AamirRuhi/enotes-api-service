@@ -19,7 +19,7 @@ public interface NotesService {
 
 	public FileDetails getFileDetails(Integer id) throws Exception;
 
-	public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
+	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize);
 
 	
 
@@ -29,11 +29,11 @@ public interface NotesService {
 
 	public void restoreNotes(Integer id) throws Exception;
 
-	public List<NotesDto> getUserRecyclyBinNotes(Integer userId);
+	public List<NotesDto> getUserRecyclyBinNotes();
 
 	public void hardDeleteNotes(Integer id) throws Exception;
 
-	public void emptyRecycleBin(Integer userId);
+	public void emptyRecycleBin();
 	// yahi bnalo favouritenotes ke liye bhi
 	
 	public void favouriteNotes(Integer noteId) throws Exception;
