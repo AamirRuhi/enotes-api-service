@@ -23,5 +23,7 @@ public class AccountStatus {
 	private boolean isActive;
 
 	private String verificationCode;
+	
+	private String passwordResetToken; // go homecontroller bcoz it was without authentication
 
 }
