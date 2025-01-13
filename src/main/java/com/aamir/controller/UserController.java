@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.aamir.dto.PasswordChangeRequest;
 import com.aamir.dto.UserResponse;
 import com.aamir.entity.User;
+import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
 
 @RestController
@@ -18,6 +22,10 @@ public class UserController {
 	
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	
+	@Autowired
+	private UserService userService;
 	
 	
  @GetMapping("/profile")
@@ -29,4 +37,13 @@ public class UserController {
 		return CommonUtil.createBuildResponse(userResponse, HttpStatus.OK);
 		
 	}
+ @PostMapping("/change-password")
+ public ResponseEntity<?> chengePassword(@RequestBody PasswordChangeRequest passwordChangeRequest){
+	 userService.changePassword(passwordChangeRequest);
+	 
+	 return CommonUtil.createBuildResponseMessage("Password changed successfully", HttpStatus.OK);
+	 
+ }
+ 
+ 
 }

@@ -14,16 +14,19 @@ public class ENotesApiService1Application {
 		SpringApplication.run(ENotesApiService1Application.class, args);
 	}
 	
-/*
+/*user login hone ke baad password change kr skta hai
+ * usr se kya lene wala hu to passwordChangeRequest dto me bnayenge oldpasswod , newPassword liya
+ * rename UserService---->AuthService, UserServiceImpl ---->AuthServiceImpl
  * 
+ * ab UserService bnayenge loggin ke baad  usme user specific methods honge,UserServiceImpl 
+ * 
+ * body me {
+    "oldPassword":"Aamir@123",
+    "newPassword":"Mamir@123"
+} Authorization me token or login response me jo password aa rha tha wo bhi remove kiya
  *  
- *  
-  * bnayenge ,UserDto ki rename krenge UserRequest ,UserResponse bnayenge
-  * dto tab bnate h jab request and response same hota hai,alag ho to request and response
- *   //jo user loggin hai uska information kaise get krna hai   , logged in user ka info get krne ke liye ,util pakage ke commonUtil me ek method
-getLoggedInUser
-note: jo AuditAwareConfig me static user ko diya hai wo dynamic krna hai 
-ab notesServiceimpl me userId dynamic diya ,todoServiceimpl jaha integer userId=2 tha usse dtnamic kiya
- *  */
+  * 
+  * 
+  * */
 
 }
