@@ -80,14 +80,14 @@ public class AuthServiceImpl implements AuthService{
 		//check save hua to object milega wrna null hoga
 		if(!ObjectUtils.isEmpty(saveUser)) {
 			//send email to user for confirmation register ,util me class EmailService bna liya and emailRequest in dto, ab yaha emailSend(saveUser) methpd
-			emailSend(saveUser,url);
+			emailSendForRegister(saveUser,url);
 			return true;
 		}
 		return false;  // AuthController bnalenge
 	}
 
 
-	private void emailSend(User saveUser, String url) throws Exception {
+	private void emailSendForRegister(User saveUser, String url) throws Exception {
 		String message = "Hi,<b>[[username]]</b> "
 	           + "<br>  Your account register sucessfully.<br>"
 				+ "<br> Click the below link verify & Active your account <br>"
