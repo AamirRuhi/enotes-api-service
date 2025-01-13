@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aamir.dto.LoginRequest;
 import com.aamir.dto.LoginResponse;
 import com.aamir.dto.UserRequest;
-import com.aamir.service.UserService;
+import com.aamir.service.AuthService;
 import com.aamir.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 	@Autowired
-	private UserService userService;
+	private AuthService authService;
 	
 	@PostMapping("/")
 	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception
@@ -30,7 +30,7 @@ public class AuthController {
 		String url =CommonUtil.getUrl(request);
 		//HttpServletRequest request big usr ko dynamic krne ke liye ,CommonUtil me
 		
-		boolean register = userService.register(userDto,url);
+		boolean register = authService.register(userDto,url);
 		if(register) {
 			return CommonUtil.createBuildResponseMessage("register success", HttpStatus.CREATED);
 		}
@@ -43,7 +43,7 @@ public class AuthController {
 	//hr resource ko access krne ke liye bar bar username,password deni ki need nhi isliye login method bnaya
 	//loginRequest bnagee dto me kya request krne wale hai
 	{
-		LoginResponse loginResponse = userService.login(loginRequest);
+		LoginResponse loginResponse = authService.login(loginRequest);
 		if(ObjectUtils.isEmpty(loginResponse))
 		{
 			return CommonUtil.createErrorResponseMessage("invalid credential", HttpStatus.BAD_REQUEST);//isko globalexception me handle krenge
