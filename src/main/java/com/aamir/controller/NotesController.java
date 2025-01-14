@@ -191,4 +191,23 @@ public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
 	return CommonUtil.createErrorResponseMessage(" Copied  failled try again", HttpStatus.INTERNAL_SERVER_ERROR);
 }
 
+
+@GetMapping("/search")
+@PreAuthorize("hasRole('USER')")
+public ResponseEntity<?> searchNotes(@RequestParam (name="key",defaultValue = "") String  key ,
+		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
+		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
+ //jo user loggin h ab uski id dynamic krenge
+//	Integer userId=1;
+	Integer userId = CommonUtil.getLoggedInUser().getId();
+	NotesResponse allNotes = notesService.getNotesByUserSearch(pageNo,pageSize,key);
+	/*
+	 * if(CollectionUtils.isEmpty(allNotes)) { // data nhi aya to no content ka koi
+	 * body nhi hota return ResponseEntity.noContent().build(); }
+	 */
+	//object pass krna hai isliye createBuildResponse
+	return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
+	
+}
+
 }
