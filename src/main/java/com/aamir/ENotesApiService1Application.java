@@ -14,12 +14,13 @@ public class ENotesApiService1Application {
 		SpringApplication.run(ENotesApiService1Application.class, args);
 	}
 	
-/*(1)send mail-password reset link*(2)verification reset link ,(3) set new password
- *AccountStatus entity me hi use krenge buhut logic h isme eg:user ko block krna ,password reset krna, 3time user ne passwod wron kiya to block krna
- *  AccountStatus 1 field add krenge passwordResetToken registration time ye null store krega,login se pehle password reset hota hai,after registration
- *  AccountStatus me column passwordResetToken bhi bna lenge
- *  http://localhost:8081/api/v1/home/send-email-reset?email=a4aamir03@gmail.com before login for registered user
- *  Change my password pr click krte hi link mila id or code ab usee verify krna ahi
+/*(
+ * isme search notes krenge custom query use krenge or ( 1 interface hai jpa me Specification custom query ke liye abhi ye nhi use krenge)
+ * title description category inhi 3no se search hoke ane wala hai ,notesRepository me custom query likhenge jo note add kiya h usi ko dikhega
+ *  created_by,is_Deleted false ho jiska
+ *  (1)notesrepome me query likha searchNotes
+ *  http://localhost:8081/api/v1/notes/search?key=java   pageNo ,pageSize default le rha hai agr match nhi kiya title ,description,category se to null
+ *  
  *  
  *  
   * */

@@ -21,8 +21,6 @@ public interface NotesService {
 
 	public NotesResponse getAllNotesByUser( Integer pageNo, Integer pageSize);
 
-	
-
 	//public NotesResponse getAllNotesByUser(Integer userId); baade add , Integer pageNo, Integer pageSize dynamic
 	
 	public void softDeleteNotes(Integer id) throws Exception;
@@ -44,4 +42,7 @@ public interface NotesService {
 	//FavouriteNotesDto bnalo 
 
 	public boolean copyNotes(Integer id) throws Exception;
+	
+	public NotesResponse getNotesByUserSearch( Integer pageNo, Integer pageSize ,String keyword);
+
 }

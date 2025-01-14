@@ -335,5 +335,32 @@ private NotesRepository notesRepository;
 		
 	}
 
+	@Override
+	public NotesResponse getNotesByUserSearch(Integer pageNo, Integer pageSize , String keyword) {
+		
+		// 0 index se page no statr hota hai to humne (1,5) means 2nd page pe 5 data ko dikhana hai
+				//1,5 static diya hai lekin hume dynamic krna hai controller se krenge
+				//Pageable  pageable = PageRequest.of(1, 2);
+				Integer userId = CommonUtil.getLoggedInUser().getId();
+				Pageable  pageable = PageRequest.of(pageNo, pageSize);
+				//NotesResponse class bnake dto me response denge jab pagination krte h to response me dete hai
+				Page<Notes> pagenotes =notesRepository.searchNotes(keyword,userId,pageable);
+				//ab all notes get kr skta hu lekin pagination lgana hai to start krte h upper se qki findByCreatedBy method me pageble ka obj denge
+				//notesDto me covert krenge notes ko
+				List<NotesDto> notesDto = pagenotes.get().map(n->modelMapper.map(n, NotesDto.class)).toList();
+				//response me set krna hai
+				NotesResponse notes =NotesResponse.builder()
+				.notes(notesDto)
+				.pageNo(pagenotes.getNumber())
+				.pageSize(pagenotes.getSize())
+				.totalElements(pagenotes.getTotalElements())
+				.totalPages(pagenotes.getTotalPages())
+				.isFirst(pagenotes.isFirst())
+				.isLast(pagenotes.isLast())
+				.build();
+				
+				return notes; //NotesController me aao
+	}
+
 	
 }
