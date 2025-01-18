@@ -2,25 +2,17 @@ package com.aamir.dto;
 
 import java.util.List;
 
-import com.aamir.entity.Role;
-import com.aamir.entity.User;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
-@Getter
-@Setter
+//@Getter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class UserRequest {
 	
 private Integer id;
@@ -34,10 +26,11 @@ private List<RoleDto> roles;
 
 
 @Builder
-@Getter
-@Setter
+//@Getter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public static class RoleDto{
 	private Integer id;
 	private String name;

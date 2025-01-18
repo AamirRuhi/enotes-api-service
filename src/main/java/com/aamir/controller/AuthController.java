@@ -16,25 +16,31 @@ import com.aamir.service.AuthService;
 import com.aamir.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 	@Autowired
 	private AuthService authService;
 	
-	@PostMapping("/")
+	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception
 	{
+		log.info("AuthController : registerUser() : execution start");
+
 		//"http://localhost:8081/api/v1/home/verify?uid isko dynamic krne ke liye HttpServletRequest request ,request me url get krenge
 		String url =CommonUtil.getUrl(request);
 		//HttpServletRequest request big usr ko dynamic krne ke liye ,CommonUtil me
 		
 		boolean register = authService.register(userDto,url);
-		if(register) {
-			return CommonUtil.createBuildResponseMessage("register success", HttpStatus.CREATED);
+		if(!register) {
+			log.info("error : {}","register failled");
+			return CommonUtil.createErrorResponseMessage("register failled", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return CommonUtil.createErrorResponseMessage("register failled", HttpStatus.INTERNAL_SERVER_ERROR);
+		log.info("AuthController : registerUser() : execution end");
+		return CommonUtil.createBuildResponseMessage("register success", HttpStatus.CREATED);
+
 
 		
 	}

@@ -16,6 +16,8 @@ import com.aamir.entity.User;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

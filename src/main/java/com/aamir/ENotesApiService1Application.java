@@ -15,10 +15,22 @@ public class ENotesApiService1Application {
 	}
 	
 /*(
- * sabko environment ko application.yml me hi configure krna ahi alg alg application.properties file nhi bnana hai 
- 
+ * Log Levels---
+ *  STRACE – Fine-grained, typically only useful in development.
+   DEBUG – Debugging information.
+   INFO – General informational messages.
+   WARN – Warnings about potential issues.
+   ERROR – Error events.
+
+ Logging  offer a systematic way to record, monitor, and analyze the behavior of an application.like
+Debugging and Troubleshooting
+
+SLF4J (Simple Logging Facade for Java) is a logging framework abstraction that provides a standardized API for various 
+logging frameworks in Java. Instead of directly using a specific logging library like Log4j or java.util.logging, 
+ *  @SLF4J lombok ke andar milta hai abhi 1 class ke andar homecontroller hi implement krnege
  *  
  *  
+ *  logback.xml bnake code copy past kiya to log folder bnega
   * */
 
 }

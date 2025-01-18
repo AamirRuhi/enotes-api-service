@@ -10,6 +10,8 @@ import com.aamir.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-//anyone can access no need to authenticate
+//slf4j use krenge jo lombok me available
 @RestController
 @RequestMapping("/api/v1/home")
 public class HomeController {
+	
+	 Logger log=LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
 	private HomeService homeService;
@@ -31,15 +35,15 @@ public class HomeController {
 
 	@GetMapping("verify")
 	public ResponseEntity<?> verifyUserAccount(@RequestParam Integer uid, @RequestParam String code) throws Exception {
-		// homeService bnayenge ab
-		boolean verifyAccount = homeService.verifyAccount(uid, code);
+		log.info("HomeController : verifyUserAccount() : Execution start");
+		boolean verifyAccount = homeService.verifyAccount(uid, code);//homeserviceImpl me @slf4j use kro
 		if (verifyAccount) {
 			return CommonUtil.createBuildResponseMessage("account verification success", HttpStatus.OK);
 		}
+		log.info("HomeController : verifyUserAccount() : Execution End");
 		return CommonUtil.createErrorResponseMessage("invalid verification link", HttpStatus.BAD_REQUEST);
 	}
 
-//password Reset krne ke liye yaha qki home ke baad authentication check nhi hoga as mentioned in securityconfig
 	@GetMapping("/send-email-reset")
 	public ResponseEntity<?> sendEmailForPasswordReset(@RequestParam String email, HttpServletRequest request)
 			throws Exception { // userservice me method create krenge
@@ -50,8 +54,6 @@ public class HomeController {
 
 	}
 
-//  Change my password click ke baad jo link aya http://localhost:8081/api/v1/home/verify-password-link?uid=22&&code=194aa8ce-3b0b-4e3d-997a-fa2f61af691e
-//user veryfy krenge uid or code ko get krna hai by requestparam
 	@GetMapping("/verify-password-link")
 	public ResponseEntity<?> verifyPasswordResetLink(@RequestParam Integer uid, @RequestParam String code)
 			throws Exception {
@@ -61,15 +63,12 @@ public class HomeController {
 
 	}
   
-	//yaha user ka uid or new password dena hai to dto me PasswordResetRequest bnalenge
 	@PostMapping("/reset-password")
 	public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) throws Exception {
     userService.resetPassword(passwordResetRequest);
     
 	return CommonUtil.createBuildResponseMessage("password reset successfully", HttpStatus.OK);
-	/*
-	 * { "uid":22, "newPassword":"Tipu@123" } body me denge
-	 */
+	
 	}
 
 }

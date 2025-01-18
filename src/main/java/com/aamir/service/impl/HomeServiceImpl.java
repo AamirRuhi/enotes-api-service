@@ -10,6 +10,8 @@ import com.aamir.exception.SuccessException;
 import com.aamir.repository.UserRepository;
 import com.aamir.service.HomeService;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class HomeServiceImpl implements HomeService{
 
@@ -18,14 +20,14 @@ public class HomeServiceImpl implements HomeService{
 	
 	@Override
 	public boolean verifyAccount(Integer userId, String verificationCode) throws Exception {
-		
-		
+		log.info("HomeServiceImpl : verifyAccount() : start");
 		//check jo userid url me h wo sahi hai ki nhi 
 		User user = userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("invalid user"));
 		//ager user id same hai then check jo url me verification code h or mere db me same hai ki nhi
 		
 		//agr koi 2nd time same url pr hit kre to vrificode to null ho chuka hai qki already 1st time kr chuka h to null vericn ko handle ke liye
           if(user.getStatus().getVerificationCode()==null) {
+      		log.info("message : Account already verified ");
         	  //custom exception bnayenge SuccessException naam ka exception pakage me
         	  throw new SuccessException("Account already verified");
       		//agr koi 2nd time same url pr hit kre to vrificode to null ho chuka hai qki already 1st time kr chuka h to null vericn ko handle ke liye
@@ -39,8 +41,11 @@ public class HomeServiceImpl implements HomeService{
 			status.setVerificationCode(null);
 			
 			userRepository.save(user);
+      		log.info("message : Account verified success ");
 			return true;
 		}
+		log.info("HomeServiceImpl : verifyAccount() : End");
+
 		return false;
 	}
 
