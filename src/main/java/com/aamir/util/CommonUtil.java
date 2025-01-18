@@ -2,16 +2,15 @@ package com.aamir.util;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.aamir.config.security.CustomUserDetails;
-import com.aamir.dto.UserResponse;
 import com.aamir.entity.User;
 import com.aamir.handler.GenericResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 public class CommonUtil {
 	

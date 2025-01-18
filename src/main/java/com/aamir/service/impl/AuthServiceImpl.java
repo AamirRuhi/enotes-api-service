@@ -26,6 +26,8 @@ import com.aamir.service.JwtService;
 import com.aamir.service.AuthService;
 import com.aamir.util.Validation;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService{
 	
@@ -58,6 +60,8 @@ public class AuthServiceImpl implements AuthService{
     
 	@Override
 	public boolean register(UserRequest userDto, String url) throws Exception {
+		log.info("AuthServiceImpl : register() : start ececution");
+
 		//validation krenge id ke liye util pakege ke validation class me
 		validation.userValidation(userDto);
 		//GlobalExceptionhandler me ek exception handler bnalenge IllegalArgumentException
@@ -78,12 +82,15 @@ public class AuthServiceImpl implements AuthService{
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User saveUser = userRepository.save(user);
 		//check save hua to object milega wrna null hoga
-		if(!ObjectUtils.isEmpty(saveUser)) {
-			//send email to user for confirmation register ,util me class EmailService bna liya and emailRequest in dto, ab yaha emailSend(saveUser) methpd
-			emailSendForRegister(saveUser,url);
-			return true;
+		if(ObjectUtils.isEmpty(saveUser)) {
+			log.info("Error : {}","user not saved");
+			return false;
 		}
-		return false;  // AuthController bnalenge
+		//send email to user for confirmation register ,util me class EmailService bna liya and emailRequest in dto, ab yaha emailSend(saveUser) methpd
+		emailSendForRegister(saveUser,url);
+		log.info("Message : {}","email sent success");
+		log.info("AuthServiceImpl : register() : start end");
+		return true;  // AuthController bnalenge
 	}
 
 
