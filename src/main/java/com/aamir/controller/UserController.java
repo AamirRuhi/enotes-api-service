@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aamir.dto.PasswordChangeRequest;
 import com.aamir.dto.UserResponse;
+import com.aamir.endpoint.UserEndpoint;
 import com.aamir.entity.User;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
@@ -19,8 +20,8 @@ import com.aamir.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
+
+public class UserController implements UserEndpoint{
 	
 	@Autowired
 	private ModelMapper modelMapper;
@@ -30,7 +31,7 @@ public class UserController {
 	private UserService userService;
 	
 	
- @GetMapping("/profile")
+	@Override
 	public ResponseEntity<?> getProfile(){
 	 User loggedInUser = CommonUtil.getLoggedInUser();
 	 //abhi ye entity type hai ise convert krna hai UserRespone me mapper ke help se
@@ -39,7 +40,7 @@ public class UserController {
 		return CommonUtil.createBuildResponse(userResponse, HttpStatus.OK);
 		
 	}
- @PostMapping("/change-password")
+ @Override
  public ResponseEntity<?> chengePassword(@RequestBody PasswordChangeRequest passwordChangeRequest){
 	 userService.changePassword(passwordChangeRequest);
 	 

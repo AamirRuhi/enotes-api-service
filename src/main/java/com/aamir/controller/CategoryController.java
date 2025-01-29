@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aamir.dto.CategoryDto;
 import com.aamir.dto.CategoryResponse;
+import com.aamir.endpoint.CategoryEndpoint;
 import com.aamir.entity.Category;
 import com.aamir.exception.ResourceNotFoundException;
 import com.aamir.service.CategoryService;
@@ -28,13 +29,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RequestMapping("/api/v1/category")
-public class CategoryController {
+
+public class CategoryController implements CategoryEndpoint {
 	@Autowired
 	private CategoryService categoryService;
 
-	@PostMapping("/save-category")
-	@PreAuthorize("hasRole('ADMIN')")//only accessed by admin ,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
+	@Override
 	public ResponseEntity<?> saveCategory( @RequestBody CategoryDto categoryDto) {
 		boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
@@ -47,9 +47,7 @@ public class CategoryController {
 			//return new ResponseEntity<>(" not saved ", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	@GetMapping("/")
-	@PreAuthorize("hasRole('ADMIN')")//only accessed by admin ,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
+	@Override
 	public ResponseEntity<?> getallCategory() {
 		List<CategoryDto> allCategory = categoryService.getAllCategory();
 
@@ -62,9 +60,7 @@ public class CategoryController {
 			//return new ResponseEntity<>(allCategory, HttpStatus.OK);
 		}
 	}
-
-	@GetMapping("/active-category")
-	@PreAuthorize("hasAnyRole('USER','ADMIN')")//only accessed by both,annotaion ko enable krne ke liye @EnableMethodSecurity in SecurityConfig
+	@Override
 	public ResponseEntity<?> getactiveCategory() {
 		List<CategoryResponse> allCategory = categoryService.getActiveCategory();
 
@@ -77,9 +73,7 @@ public class CategoryController {
 
 		}
 	}
-
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@Override
 	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception {
 			CategoryDto categoryDto = categoryService.getCategoryById(id);
 
@@ -94,9 +88,7 @@ public class CategoryController {
 
 
 	}
-
-	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@Override
 	public ResponseEntity<?> deleteCategoryDetailsById(@PathVariable Integer id) {
 		Boolean deleted = categoryService.deleteCategory(id);
 

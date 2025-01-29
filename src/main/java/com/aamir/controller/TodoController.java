@@ -17,18 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.aamir.dto.TodoDto;
+import com.aamir.endpoint.TodoEndpoint;
 import com.aamir.service.TodoService;
 import com.aamir.util.CommonUtil;
 
 @RestController
-@RequestMapping("/api/v1/todo")
-public class TodoController {
+
+public class TodoController implements TodoEndpoint{
 
 	@Autowired
 	private TodoService todoService;
-	
-	@PostMapping("/")
-	@PreAuthorize("hasRole('USER')")
+	@Override
 	public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception{
 		boolean saveTodo = todoService.saveTodo(todoDto);
 		if(saveTodo) {
@@ -39,8 +38,7 @@ public class TodoController {
 		}
 	
 	}
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('USER')")
+	@Override
 	public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws Exception{
 	 TodoDto todo = todoService.getTodoById(id);
 	 
@@ -48,8 +46,7 @@ public class TodoController {
 		
 	
 	}
-	@GetMapping("/list")
-	@PreAuthorize("hasRole('USER')")
+	@Override
 	public ResponseEntity<?> getAllTodoByUser() throws Exception{
 		List<TodoDto> todoList = todoService.getTodoByUser();
 		if(CollectionUtils.isEmpty(todoList)) {

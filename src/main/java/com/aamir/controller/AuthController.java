@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aamir.dto.LoginRequest;
 import com.aamir.dto.LoginResponse;
 import com.aamir.dto.UserRequest;
+import com.aamir.endpoint.AuthEndpoint;
 import com.aamir.service.AuthService;
 import com.aamir.util.CommonUtil;
 
@@ -19,12 +20,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
-public class AuthController {
+
+public class AuthController implements AuthEndpoint{
 	@Autowired
 	private AuthService authService;
 	
-	@PostMapping("/register")
+@Override
 	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception
 	{
 		log.info("AuthController : registerUser() : execution start");
@@ -44,7 +45,7 @@ public class AuthController {
 
 		
 	}
-	@PostMapping("/login")
+@Override
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception
 	//hr resource ko access krne ke liye bar bar username,password deni ki need nhi isliye login method bnaya
 	//loginRequest bnagee dto me kya request krne wale hai

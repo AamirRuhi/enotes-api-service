@@ -1,7 +1,5 @@
-2025-18-07 15:07:34.216 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-18-07 15:07:34.220 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-2025-18-07 15:07:34.224 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
-2025-18-07 15:07:34.241 INFO  [http-nio-8080-exec-2] com.aamir.controller.AuthController - AuthController : registerUser() : execution start
-2025-18-07 15:07:34.243 INFO  [http-nio-8080-exec-2] c.aamir.service.impl.AuthServiceImpl - AuthServiceImpl : register() : start ececution
-2025-18-07 15:07:34.261 ERROR [http-nio-8080-exec-2] c.a.exception.GlobalExceptionHandler - GlobalExceptionHandler : handleExistDataException() : this email already exist
-2025-18-07 15:07:34.271 WARN  [http-nio-8080-exec-2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.aamir.exception.ExistDataException: this email already exist]
+2025-30-32 00:32:52.103 INFO  [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-30-32 00:32:52.104 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-30-32 00:32:52.106 INFO  [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-30-32 00:32:52.695 ERROR [http-nio-8080-exec-2] c.a.exception.GlobalExceptionHandler - GlobalExceptionHandler : handleBadCredentialsException() : Bad credentials
+2025-30-32 00:32:52.728 WARN  [http-nio-8080-exec-2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.security.authentication.BadCredentialsException: Bad credentials]

@@ -23,20 +23,20 @@ import org.springframework.web.multipart.MultipartFile;
 import com.aamir.dto.FavouriteNotesDto;
 import com.aamir.dto.NotesDto;
 import com.aamir.dto.NotesResponse;
+import com.aamir.endpoint.NotesEndpoint;
 import com.aamir.entity.FileDetails;
 import com.aamir.entity.User;
 import com.aamir.service.NotesService;
 import com.aamir.util.CommonUtil;
 
 @RestController
-@RequestMapping("/api/v1/notes")
-public class NotesController {
+
+public class NotesController implements NotesEndpoint{
 	
 @Autowired
 private NotesService notesService;
 	
-@PostMapping("/")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> saveNotess(@RequestParam String notes,@RequestParam(required=false) MultipartFile file) throws Exception{
 	//category bhi dena hai like "categoryDto":{id:12
 //} file upload me data ko string me file ko muiltipart me 
@@ -51,8 +51,7 @@ public ResponseEntity<?> saveNotess(@RequestParam String notes,@RequestParam(req
 }
 
 // file ko download krne ke liye file ke unique id se 
-@GetMapping("/download/{id}")
-@PreAuthorize("hasAnyRole('ADMIN','USER')")
+@Override
 public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
 	
 	FileDetails fileDetails=notesService.getFileDetails(id);
@@ -68,9 +67,7 @@ public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception
 	return ResponseEntity.ok().headers(headers).body(data);
 	
 }
-
-@GetMapping("/")
-@PreAuthorize("hasRole('ADMIN')")
+@Override
 public ResponseEntity<?> getAllNotesss(){
 	List<NotesDto> allNotes = notesService.getAllNotes();
 	if(CollectionUtils.isEmpty(allNotes)) {
@@ -84,8 +81,7 @@ public ResponseEntity<?> getAllNotesss(){
 // jo user add notes kiya hai wahi get kr skta hai notes , abhi static user de rha hai
 //dynamic dikhane ke liye @requestparam but pehle getAllNotesssByUser parameter me kuch nhi tha,getAllNotesByUser pageno,pagesize pass kr denge ,service or imple me bhi
 //default 0 index se strt hoga ,custom krne ke liye param me key pagen0->1,pagesize->4
-@GetMapping("/user-notes")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> getAllNotesssByUser(
 		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
 		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
@@ -101,24 +97,21 @@ public ResponseEntity<?> getAllNotesssByUser(
 	return CommonUtil.createBuildResponse(allNotes, HttpStatus.OK);
 	
 }
-@GetMapping("/delete/{id}")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception{
 	notesService.softDeleteNotes(id);
 	
 	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
 }
-@GetMapping("/restore/{id}")
-@PreAuthorize("hasRole('USER')")
+
+@Override
 public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
 	notesService.restoreNotes(id);
 	
 	return CommonUtil.createBuildResponseMessage(" notes restored success", HttpStatus.OK);
 }
 
-
-@GetMapping("/recycle-bin")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> getUserRecleBinNotes() throws Exception{
 	//deleted notes ko recycle bean me rakhne wale hai , authentication time user se is lunga lekin abhi static leke bna rha hu
 	
@@ -130,8 +123,7 @@ public ResponseEntity<?> getUserRecleBinNotes() throws Exception{
 }
 //NotesSchedular completion  ke baad hum database se hard delete krne wale hai 
 //ab ek api jise jo notes recycle bin me h use delete kr skta hai based on id , ya fully folder ko bhi delete kr skta hai
-@DeleteMapping("/delete/{id}")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception{
 	
 	notesService.hardDeleteNotes(id);
@@ -139,8 +131,7 @@ public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Except
 	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
 }
 //ab recycle bin ka sara delete krne ke liye 
-@DeleteMapping("/delete")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> emptyUserRecycleBine()throws Exception{
 	//jo user login h , kis user ka notes recycle bin me h get get krke delete all , userid ststic lenege
 	
@@ -151,24 +142,20 @@ public ResponseEntity<?> emptyUserRecycleBine()throws Exception{
 }
 
 
-
-@GetMapping("/fav/{noteId}")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> favouriteNotes(@PathVariable Integer noteId )throws Exception{
 	notesService.favouriteNotes(noteId);
 	
 	return CommonUtil.createBuildResponseMessage(" notes added favourite success", HttpStatus.CREATED);
 }
-@DeleteMapping("/un-fav/{favNoteId}")
+@Override
 public ResponseEntity<?> unFavouriteNotes(@PathVariable Integer favNoteId)throws Exception{
 	
 	notesService.unFavouriteNotes(favNoteId);
 	
 	return CommonUtil.createBuildResponseMessage(" remove  favourite notes success", HttpStatus.OK);
 }
-
-@GetMapping("/fav-note")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> getUserFavouritNotes()throws Exception{
 
 	List<FavouriteNotesDto> userFavouriteNotes = notesService.getUserFavouriteNotes();
@@ -180,8 +167,7 @@ public ResponseEntity<?> getUserFavouritNotes()throws Exception{
 }
 // notes ke id ke base pe copy krke fir se insert kr denge
 //http://localhost:8081/api/v1/notes/copy/44
-@GetMapping("/copy/{id}")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
 	boolean copyNotes = notesService.copyNotes(id);
 	if(copyNotes) {
@@ -191,9 +177,7 @@ public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
 	return CommonUtil.createErrorResponseMessage(" Copied  failled try again", HttpStatus.INTERNAL_SERVER_ERROR);
 }
 
-
-@GetMapping("/search")
-@PreAuthorize("hasRole('USER')")
+@Override
 public ResponseEntity<?> searchNotes(@RequestParam (name="key",defaultValue = "") String  key ,
 		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
 		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
