@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aamir.dto.PasswordResetRequest;
+import com.aamir.endpoint.HomeEndpoint;
 import com.aamir.service.HomeService;
 import com.aamir.service.UserService;
 import com.aamir.util.CommonUtil;
@@ -22,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 //slf4j use krenge jo lombok me available
 @RestController
-@RequestMapping("/api/v1/home")
-public class HomeController {
+
+public class HomeController implements HomeEndpoint {
 	
 	 Logger log=LoggerFactory.getLogger(HomeController.class);
 
@@ -33,7 +34,7 @@ public class HomeController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping("verify")
+    @Override
 	public ResponseEntity<?> verifyUserAccount(@RequestParam Integer uid, @RequestParam String code) throws Exception {
 		log.info("HomeController : verifyUserAccount() : Execution start");
 		boolean verifyAccount = homeService.verifyAccount(uid, code);//homeserviceImpl me @slf4j use kro
@@ -44,7 +45,7 @@ public class HomeController {
 		return CommonUtil.createErrorResponseMessage("invalid verification link", HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping("/send-email-reset")
+    @Override
 	public ResponseEntity<?> sendEmailForPasswordReset(@RequestParam String email, HttpServletRequest request)
 			throws Exception { // userservice me method create krenge
 		userService.sendEmailPasswordReset(email, request);
@@ -54,7 +55,7 @@ public class HomeController {
 
 	}
 
-	@GetMapping("/verify-password-link")
+    @Override
 	public ResponseEntity<?> verifyPasswordResetLink(@RequestParam Integer uid, @RequestParam String code)
 			throws Exception {
 		userService.verifypswdResetLing(uid, code);
@@ -63,7 +64,7 @@ public class HomeController {
 
 	}
   
-	@PostMapping("/reset-password")
+    @Override
 	public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) throws Exception {
     userService.resetPassword(passwordResetRequest);
     
