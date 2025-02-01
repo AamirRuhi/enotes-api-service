@@ -37,7 +37,7 @@ public class NotesController implements NotesEndpoint{
 private NotesService notesService;
 	
 @Override
-public ResponseEntity<?> saveNotess(@RequestParam String notes,@RequestParam(required=false) MultipartFile file) throws Exception{
+public ResponseEntity<?> saveNotess( String notes, MultipartFile file) throws Exception{
 	//category bhi dena hai like "categoryDto":{id:12
 //} file upload me data ko string me file ko muiltipart me 
 	//abhi file nhi liye h to (required=false) krdenge @RequestParam ke baad or form-data me key->notes ,value- json
@@ -52,7 +52,7 @@ public ResponseEntity<?> saveNotess(@RequestParam String notes,@RequestParam(req
 
 // file ko download krne ke liye file ke unique id se 
 @Override
-public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> downloadFile( Integer id) throws Exception{
 	
 	FileDetails fileDetails=notesService.getFileDetails(id);
 	byte[] data=notesService.downloadFile(fileDetails);
@@ -82,9 +82,7 @@ public ResponseEntity<?> getAllNotesss(){
 //dynamic dikhane ke liye @requestparam but pehle getAllNotesssByUser parameter me kuch nhi tha,getAllNotesByUser pageno,pagesize pass kr denge ,service or imple me bhi
 //default 0 index se strt hoga ,custom krne ke liye param me key pagen0->1,pagesize->4
 @Override
-public ResponseEntity<?> getAllNotesssByUser(
-		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
+public ResponseEntity<?> getAllNotesssByUser( Integer pageNo,Integer pageSize	){
  //jo user loggin h ab uski id dynamic krenge
 //	Integer userId=1;
 	Integer userId = CommonUtil.getLoggedInUser().getId();
@@ -98,14 +96,14 @@ public ResponseEntity<?> getAllNotesssByUser(
 	
 }
 @Override
-public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> deleteNotes( Integer id) throws Exception{
 	notesService.softDeleteNotes(id);
 	
 	return CommonUtil.createBuildResponseMessage(" notes deleted success", HttpStatus.OK);
 }
 
 @Override
-public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> restoreNotes( Integer id) throws Exception{
 	notesService.restoreNotes(id);
 	
 	return CommonUtil.createBuildResponseMessage(" notes restored success", HttpStatus.OK);
@@ -124,7 +122,7 @@ public ResponseEntity<?> getUserRecleBinNotes() throws Exception{
 //NotesSchedular completion  ke baad hum database se hard delete krne wale hai 
 //ab ek api jise jo notes recycle bin me h use delete kr skta hai based on id , ya fully folder ko bhi delete kr skta hai
 @Override
-public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception{
+public ResponseEntity<?> hardDeleteNotes( Integer id) throws Exception{
 	
 	notesService.hardDeleteNotes(id);
 	
@@ -143,13 +141,13 @@ public ResponseEntity<?> emptyUserRecycleBine()throws Exception{
 
 
 @Override
-public ResponseEntity<?> favouriteNotes(@PathVariable Integer noteId )throws Exception{
+public ResponseEntity<?> favouriteNotes( Integer noteId )throws Exception{
 	notesService.favouriteNotes(noteId);
 	
 	return CommonUtil.createBuildResponseMessage(" notes added favourite success", HttpStatus.CREATED);
 }
 @Override
-public ResponseEntity<?> unFavouriteNotes(@PathVariable Integer favNoteId)throws Exception{
+public ResponseEntity<?> unFavouriteNotes( Integer favNoteId)throws Exception{
 	
 	notesService.unFavouriteNotes(favNoteId);
 	
@@ -168,7 +166,7 @@ public ResponseEntity<?> getUserFavouritNotes()throws Exception{
 // notes ke id ke base pe copy krke fir se insert kr denge
 //http://localhost:8081/api/v1/notes/copy/44
 @Override
-public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
+public ResponseEntity<?> copyNotes( Integer id )throws Exception{
 	boolean copyNotes = notesService.copyNotes(id);
 	if(copyNotes) {
 		return CommonUtil.createBuildResponseMessage(" Copied  success", HttpStatus.CREATED);
@@ -178,9 +176,7 @@ public ResponseEntity<?> copyNotes(@PathVariable Integer id )throws Exception{
 }
 
 @Override
-public ResponseEntity<?> searchNotes(@RequestParam (name="key",defaultValue = "") String  key ,
-		@RequestParam(name="pageNo",defaultValue = "0") Integer pageNo,
-		@RequestParam(name="pageSize",defaultValue = "10") Integer pageSize	){
+public ResponseEntity<?> searchNotes(String  key ,Integer pageNo, Integer pageSize	){
  //jo user loggin h ab uski id dynamic krenge
 //	Integer userId=1;
 	Integer userId = CommonUtil.getLoggedInUser().getId();
