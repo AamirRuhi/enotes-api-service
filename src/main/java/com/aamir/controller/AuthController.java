@@ -26,7 +26,7 @@ public class AuthController implements AuthEndpoint{
 	private AuthService authService;
 	
 @Override
-	public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto,HttpServletRequest request) throws Exception
+	public ResponseEntity<?> registerUser( UserRequest userDto,HttpServletRequest request) throws Exception
 	{
 		log.info("AuthController : registerUser() : execution start");
 
@@ -46,7 +46,7 @@ public class AuthController implements AuthEndpoint{
 		
 	}
 @Override
-	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception
+	public ResponseEntity<?> login( LoginRequest loginRequest) throws Exception
 	//hr resource ko access krne ke liye bar bar username,password deni ki need nhi isliye login method bnaya
 	//loginRequest bnagee dto me kya request krne wale hai
 	{

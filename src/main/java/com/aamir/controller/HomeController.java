@@ -35,7 +35,7 @@ public class HomeController implements HomeEndpoint {
 	private UserService userService;
 
     @Override
-	public ResponseEntity<?> verifyUserAccount(@RequestParam Integer uid, @RequestParam String code) throws Exception {
+	public ResponseEntity<?> verifyUserAccount( Integer uid, String code) throws Exception {
 		log.info("HomeController : verifyUserAccount() : Execution start");
 		boolean verifyAccount = homeService.verifyAccount(uid, code);//homeserviceImpl me @slf4j use kro
 		if (verifyAccount) {
@@ -46,7 +46,7 @@ public class HomeController implements HomeEndpoint {
 	}
 
     @Override
-	public ResponseEntity<?> sendEmailForPasswordReset(@RequestParam String email, HttpServletRequest request)
+	public ResponseEntity<?> sendEmailForPasswordReset( String email, HttpServletRequest request)
 			throws Exception { // userservice me method create krenge
 		userService.sendEmailPasswordReset(email, request);
 
@@ -56,7 +56,7 @@ public class HomeController implements HomeEndpoint {
 	}
 
     @Override
-	public ResponseEntity<?> verifyPasswordResetLink(@RequestParam Integer uid, @RequestParam String code)
+	public ResponseEntity<?> verifyPasswordResetLink( Integer uid,  String code)
 			throws Exception {
 		userService.verifypswdResetLing(uid, code);
 
@@ -65,7 +65,7 @@ public class HomeController implements HomeEndpoint {
 	}
   
     @Override
-	public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) throws Exception {
+	public ResponseEntity<?> resetPassword( PasswordResetRequest passwordResetRequest) throws Exception {
     userService.resetPassword(passwordResetRequest);
     
 	return CommonUtil.createBuildResponseMessage("password reset successfully", HttpStatus.OK);

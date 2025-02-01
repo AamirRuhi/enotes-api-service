@@ -35,7 +35,7 @@ public class CategoryController implements CategoryEndpoint {
 	private CategoryService categoryService;
 
 	@Override
-	public ResponseEntity<?> saveCategory( @RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<?> saveCategory( CategoryDto categoryDto) {
 		boolean saveCategory = categoryService.saveCategory(categoryDto);
 		if (saveCategory) {
 			// generic msg dikhana hai or status avi niche wala commmt kr liya
@@ -74,7 +74,7 @@ public class CategoryController implements CategoryEndpoint {
 		}
 	}
 	@Override
-	public ResponseEntity<?> getCategoryDetailsById(@PathVariable Integer id) throws Exception {
+	public ResponseEntity<?> getCategoryDetailsById( Integer id) throws Exception {
 			CategoryDto categoryDto = categoryService.getCategoryById(id);
 
 			if (ObjectUtils.isEmpty(categoryDto)) {
@@ -89,7 +89,7 @@ public class CategoryController implements CategoryEndpoint {
 
 	}
 	@Override
-	public ResponseEntity<?> deleteCategoryDetailsById(@PathVariable Integer id) {
+	public ResponseEntity<?> deleteCategoryDetailsById( Integer id) {
 		Boolean deleted = categoryService.deleteCategory(id);
 
 		if (deleted) {
