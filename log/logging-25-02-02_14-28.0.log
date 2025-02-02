@@ -1,0 +1,2 @@
+2025-02-28 14:28 ERROR [http-nio-8080-exec-2] c.a.exception.GlobalExceptionHandler - GlobalExceptionHandler : handleException() : No static resource enotes-api-doc.
+2025-02-28 14:28 WARN  [http-nio-8080-exec-2] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.servlet.resource.NoResourceFoundException: No static resource enotes-api-doc.]

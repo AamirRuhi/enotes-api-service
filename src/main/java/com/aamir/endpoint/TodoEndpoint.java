@@ -11,15 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static com.aamir.util.Constants.ROLE_USER;
 
 import com.aamir.dto.TodoDto;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Todo", description ="All the Todo  Apis")
 @RequestMapping("/api/v1/todo")
 public interface TodoEndpoint {
+	
+	
+	@Operation(summary = "Save Todo ",tags= {"Todo"},description = "User save todo")
 	@PostMapping("/")
 	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception;
+	
+	
+	@Operation(summary = "Get Todo  ",tags= {"Todo"},description = "Get Todo by id")
 	@GetMapping("/{id}")
 	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws Exception;
 	
+	
+	@Operation(summary = "Get All Todo by user ",tags= {"Todo"},description = "Get All Todo by user")
 	@GetMapping("/list")
 	@PreAuthorize(ROLE_USER)
 	public ResponseEntity<?> getAllTodoByUser() throws Exception;

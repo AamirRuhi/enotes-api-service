@@ -1,0 +1,6 @@
+2025-02-16 00:16 INFO  [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-16 00:16 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-02-16 00:16 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-02-16 00:16 INFO  [http-nio-8080-exec-9] o.s.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 110 ms
+2025-02-16 00:16 ERROR [http-nio-8080-exec-9] c.a.exception.GlobalExceptionHandler - GlobalExceptionHandler : handleException() : ServletOutputStream failed to flush: java.io.IOException: An established connection was aborted by the software in your host machine
+2025-02-16 00:16 WARN  [http-nio-8080-exec-9] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletOutputStream failed to flush: java.io.IOException: An established connection was aborted by the software in your host machine]

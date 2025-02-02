@@ -35,7 +35,14 @@ spring:
         smtp:
           auth: true
           starttls:
-            enable: true       
+            enable: true       						
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    path: /enotes-doc
+  api-docs:
+    path: /enotes-api-doc	
 file:
   upload:
     path: notes/
