@@ -1,0 +1,2 @@
+2025-02-56 15:56 ERROR [http-nio-8080-exec-8] c.a.exception.GlobalExceptionHandler - GlobalExceptionhandler : handleResourceNotFoundException() : category not found with id=16758
+2025-02-56 15:56 WARN  [http-nio-8080-exec-8] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [com.aamir.exception.ResourceNotFoundException: category not found with id=16758]

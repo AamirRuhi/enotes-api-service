@@ -1,0 +1,5 @@
+2025-01-36 22:36 INFO  [http-nio-8080-exec-4] com.aamir.controller.AuthController - AuthController : registerUser() : execution start
+2025-01-36 22:36 INFO  [http-nio-8080-exec-4] c.aamir.service.impl.AuthServiceImpl - AuthServiceImpl : register() : start ececution
+2025-01-36 22:36 INFO  [http-nio-8080-exec-4] c.aamir.service.impl.AuthServiceImpl - Message : email sent success
+2025-01-36 22:36 INFO  [http-nio-8080-exec-4] c.aamir.service.impl.AuthServiceImpl - AuthServiceImpl : register() : start end
+2025-01-36 22:36 INFO  [http-nio-8080-exec-4] com.aamir.controller.AuthController - AuthController : registerUser() : execution end
